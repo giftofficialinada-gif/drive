@@ -14,6 +14,7 @@
     --teal-light: #E1F5EE; --teal-dark: #085041;
     --amber-light: #FAEEDA; --amber-dark: #633806;
     --purple-light: #EEEDFE; --purple-dark: #3C3489;
+    --green-light: #E8F7EE; --green-dark: #1A6B3C;
     --red: #E24B4A; --danger: #A32D2D; --danger-border: rgba(163,45,45,0.4);
     --radius: 8px; --radius-lg: 12px;
   }
@@ -26,6 +27,7 @@
       --teal-light: #062820; --teal-dark: #5dcaa5;
       --amber-light: #2e1f04; --amber-dark: #fac775;
       --purple-light: #1e1b3a; --purple-dark: #afa9ec;
+      --green-light: #0d2e1c; --green-dark: #5dcaa5;
     }
   }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg3); color: var(--text); min-height: 100vh; }
@@ -33,12 +35,12 @@
   .hidden { display: none !important; }
   h3 { font-size: 16px; font-weight: 500; margin: 0 0 1rem; }
   label { font-size: 13px; color: var(--text2); display: block; margin-bottom: 4px; }
-  input[type=text], input[type=number], input[type=date], textarea {
+  input[type=text], input[type=number], input[type=date], textarea, select {
     width: 100%; padding: 8px 12px; font-size: 14px; border: 0.5px solid var(--border2);
     border-radius: var(--radius); background: var(--bg); color: var(--text);
     font-family: inherit; outline: none; transition: border-color .15s;
   }
-  input:focus, textarea:focus { border-color: var(--blue-mid); box-shadow: 0 0 0 3px rgba(55,138,221,0.15); }
+  input:focus, textarea:focus, select:focus { border-color: var(--blue-mid); box-shadow: 0 0 0 3px rgba(55,138,221,0.15); }
   textarea { min-height: 56px; resize: vertical; }
   .btn-primary { width: 100%; padding: 10px; background: var(--blue); color: #fff; border: none; border-radius: var(--radius); font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit; }
   .btn-primary:hover { background: var(--blue-dark); }
@@ -82,10 +84,16 @@
   .cal-day.has-data { background: var(--blue-light); }
   .cal-day.has-data:hover { background: #B5D4F4; }
   .cal-day.other-month { opacity: .35; }
+  .cal-day.closing-day { border-color: var(--red) !important; border-width: 1.5px !important; }
   .cal-num { font-size: 12px; font-weight: 500; text-align: center; margin-bottom: 2px; }
   .cal-yen { font-size: 10px; color: var(--blue-dark); text-align: center; line-height: 1.3; }
   .cal-cnt { font-size: 10px; color: var(--teal-dark); text-align: center; }
   .record-row { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 0.5px solid var(--border); font-size: 14px; flex-wrap: wrap; }
+  .period-header { background: var(--green-light); border: 0.5px solid rgba(26,107,60,0.2); border-radius: var(--radius); padding: 10px 14px; margin: 12px 0 4px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .period-header .ph-title { font-size: 13px; font-weight: 500; color: var(--green-dark); }
+  .period-header .ph-summary { font-size: 13px; color: var(--green-dark); }
+  .period-header .ph-total { font-size: 16px; font-weight: 600; color: var(--green-dark); }
+  .summary-banner { background: var(--green-light); border: 0.5px solid rgba(26,107,60,0.25); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
   .toast-wrap { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 999; pointer-events: none; }
   .toast { background: var(--blue); color: #fff; padding: 10px 24px; border-radius: var(--radius); font-size: 14px; opacity: 0; transition: opacity .3s; white-space: nowrap; }
   .toast.show { opacity: 1; }
@@ -147,10 +155,14 @@
   <div id="screen-main" class="hidden">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;flex-wrap:wrap;">
       <div class="avatar" id="main-avatar">--</div>
-      <div style="flex:1;"><p style="font-size:15px;font-weight:500;margin:0;" id="main-uname">--</p><p style="font-size:12px;color:var(--text2);margin:0;">配送トラッカー</p></div>
+      <div style="flex:1;"><p style="font-size:15px;font-weight:500;margin:0;" id="main-uname">--</p><p style="font-size:12px;color:var(--text2);margin:0;" id="main-closing-label">締め日：末日</p></div>
       <button class="btn-sm" onclick="ss('settings')">設定</button>
       <button class="btn-sm" onclick="doLogout()">ログアウト</button>
     </div>
+
+    <!-- 当締め期間バナー -->
+    <div class="summary-banner" id="period-banner"></div>
+
     <div class="tab-bar">
       <button class="tab-btn active" id="tab-input" onclick="switchTab('input')">記録入力</button>
       <button class="tab-btn" id="tab-calendar" onclick="switchTab('calendar')">カレンダー</button>
@@ -189,13 +201,14 @@
         <div class="cal-dow" style="color:var(--blue);">土</div>
       </div>
       <div class="cal-grid" id="cal-body"></div>
+      <p style="font-size:11px;color:var(--text3);margin:6px 0 0;text-align:right;">🔴 枠 = 締め日</p>
       <div id="cal-detail" style="margin-top:1rem;"></div>
     </div>
 
     <!-- 一覧 -->
     <div id="pane-list" class="hidden">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <span style="font-size:15px;font-weight:500;">過去の記録</span>
+        <span style="font-size:15px;font-weight:500;">締め期間別・記録一覧</span>
         <button class="btn-sm" onclick="exportCSV()">CSVで出力</button>
       </div>
       <div id="history-list"></div>
@@ -208,6 +221,20 @@
       <button class="btn-sm" onclick="ss('main')">← 戻る</button>
       <span style="font-size:16px;font-weight:500;">設定</span>
     </div>
+
+    <!-- 締め日設定 -->
+    <div class="card">
+      <h3>締め日の設定</h3>
+      <p style="font-size:13px;color:var(--text2);margin:0 0 12px;">毎月の締め日を設定します。翌月の同日の前日までが1締め期間になります。</p>
+      <label>締め日</label>
+      <select id="closing-day-select" style="margin-bottom:12px;">
+        <option value="0">月末（末日）</option>
+      </select>
+      <button class="btn-sm" onclick="saveClosingDay()" style="width:100%;">保存する</button>
+      <p class="err" id="closing-err"></p>
+    </div>
+
+    <!-- 種別管理 -->
     <div class="card">
       <h3>荷物種別の管理</h3>
       <div id="categories-list" style="margin-bottom:12px;"></div>
@@ -220,6 +247,8 @@
       <button class="btn-sm" onclick="addCategory()" style="width:100%;">追加する</button>
       <p class="err" id="cat-err"></p>
     </div>
+
+    <!-- PIN変更 -->
     <div class="card">
       <h3>PIN変更</h3>
       <label style="text-align:center;display:block;margin-bottom:4px;">現在のPIN</label>
@@ -240,6 +269,7 @@
       </div>
       <p class="err" id="pw-err" style="text-align:center;"></p>
     </div>
+
     <div class="card">
       <h3>アカウント削除</h3>
       <p style="font-size:13px;color:var(--text2);margin:0 0 12px;">すべての記録と設定が削除されます。この操作は取り消せません。</p>
@@ -256,19 +286,19 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const DEFAULTS = [{id:'normal',name:'通常',price:155,fixed:true},{id:'cool',name:'クール',price:235,fixed:true},{id:'collect',name:'コレクト',price:232,fixed:true}];
 const CAT_COLORS = {normal:'#378ADD',cool:'#1D9E75',collect:'#BA7517'};
-let CU=null, cats=[], records=[];
+let CU=null, cats=[], records=[], closingDay=0; // 0=末日
 const pins={};
 let calYear, calMonth;
 
-/* ── Supabase ── */
+/* ══ Supabase ══ */
 async function sb(path, method='GET', body=null) {
-  const h = {'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY};
-  if(method==='POST') h['Prefer']='return=representation';
-  const res = await fetch(SUPABASE_URL+'/rest/v1/'+path, {method, headers:h, body:body?JSON.stringify(body):null});
+  const h={'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY};
+  if(method==='POST')h['Prefer']='return=representation';
+  const res=await fetch(SUPABASE_URL+'/rest/v1/'+path,{method,headers:h,body:body?JSON.stringify(body):null});
   if(!res.ok){const e=await res.json();throw new Error(e.message||res.status);}
-  const t=await res.text(); return t?JSON.parse(t):[];
+  const t=await res.text();return t?JSON.parse(t):[];
 }
-const enc = s => encodeURIComponent(s);
+const enc=s=>encodeURIComponent(s);
 async function dbGetUser(u){const r=await sb(`users?username=eq.${enc(u)}&select=*`);return r[0]||null;}
 async function dbCreateUser(u,h){return sb('users','POST',{username:u,pin_hash:h});}
 async function dbUpdatePin(u,h){return sb(`users?username=eq.${enc(u)}`,'PATCH',{pin_hash:h});}
@@ -278,13 +308,24 @@ async function dbInsertRecord(u,date,counts,memo,saved){return sb('delivery_reco
 async function dbUpdateRecord(u,date,counts,memo,saved){return sb(`delivery_records?username=eq.${enc(u)}&date=eq.${date}`,'PATCH',{counts,memo,saved});}
 async function dbDeleteRecord(u,date){return sb(`delivery_records?username=eq.${enc(u)}&date=eq.${date}`,'DELETE');}
 async function dbGetCats(u){const r=await sb(`categories?username=eq.${enc(u)}&select=*`);return r[0]?r[0].data:null;}
-async function dbSaveCats(u,data){
-  const ex=await sb(`categories?username=eq.${enc(u)}&select=id`);
-  if(ex.length) return sb(`categories?username=eq.${enc(u)}`,'PATCH',{data});
-  return sb('categories','POST',{username:u,data});
+async function dbSaveCats(u,data){const ex=await sb(`categories?username=eq.${enc(u)}&select=id`);if(ex.length)return sb(`categories?username=eq.${enc(u)}`,'PATCH',{data});return sb('categories','POST',{username:u,data});}
+
+/* 締め日はusersテーブルのclosing_dayカラムに保存（なければlocalStorageで代替） */
+async function dbSaveClosingDay(u,day){
+  try{ await sb(`users?username=eq.${enc(u)}`,'PATCH',{closing_day:day}); }
+  catch(e){ localStorage.setItem('closing_'+u, day); }
+  localStorage.setItem('closing_'+u, day);
+}
+async function dbGetClosingDay(u){
+  try{
+    const r=await sb(`users?username=eq.${enc(u)}&select=closing_day`);
+    if(r[0]&&r[0].closing_day!=null)return r[0].closing_day;
+  }catch(e){}
+  const v=localStorage.getItem('closing_'+u);
+  return v!=null?parseInt(v):0;
 }
 
-/* ── PIN ── */
+/* ══ PIN ══ */
 function pi(ctx,v){
   if(!pins[ctx])pins[ctx]='';
   if(v==='clear')pins[ctx]='';
@@ -298,13 +339,73 @@ function pi(ctx,v){
 function updDots(ctx){const l=(pins[ctx]||'').length;for(let i=0;i<4;i++){const el=document.getElementById(ctx+'-d'+i);if(el)el.classList.toggle('filled',i<l);}}
 function hashPin(p){let h=0;for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeAt(i);h|=0;}return h.toString(36);}
 
-/* ── Screens ── */
-function ss(name){['login','register','main','settings'].forEach(s=>document.getElementById('screen-'+s).classList.toggle('hidden',s!==name));if(name==='settings')renderCatList();window.scrollTo(0,0);}
+/* ══ UI helpers ══ */
+function ss(name){['login','register','main','settings'].forEach(s=>document.getElementById('screen-'+s).classList.toggle('hidden',s!==name));if(name==='settings')initSettingsScreen();window.scrollTo(0,0);}
 function todayStr(){return new Date().toISOString().slice(0,10);}
 function showLoading(msg='処理中...'){let el=document.getElementById('lov');if(!el){el=document.createElement('div');el.id='lov';el.className='loading-overlay';document.body.appendChild(el);}el.innerHTML=`<div class="loading-box">${msg}</div>`;el.classList.remove('hidden');}
 function hideLoading(){const el=document.getElementById('lov');if(el)el.classList.add('hidden');}
 
-/* ── Auth ── */
+/* ══ 締め期間計算 ══ */
+// closingDay: 0=末日, 1〜31=その日
+// 締め期間: 前月締め日+1 〜 当月締め日
+function getClosingDate(year, month, day) {
+  // dayが0=末日
+  if(day===0) return new Date(year, month+1, 0); // 月末
+  const lastDay = new Date(year, month+1, 0).getDate();
+  return new Date(year, month, Math.min(day, lastDay));
+}
+
+function getPeriodForDate(dateStr) {
+  // dateStrの属する締め期間の start〜end を返す
+  const d = new Date(dateStr);
+  const year = d.getFullYear(), month = d.getMonth(), date = d.getDate();
+  const cd = closingDay;
+
+  let periodEnd, periodStart;
+  if(cd===0){
+    // 末日締め: 1日〜末日
+    periodStart = new Date(year, month, 1);
+    periodEnd   = new Date(year, month+1, 0);
+  } else {
+    // cd日締め: 前月cd+1日 〜 今月cd日
+    // dateがcd日以前なら「前月cd+1 〜 今月cd」
+    // dateがcd日より後なら「今月cd+1 〜 来月cd」
+    if(date <= cd){
+      const prevLastDay = new Date(year, month, 0).getDate();
+      periodStart = new Date(year, month-1, Math.min(cd+1, prevLastDay));
+      periodEnd   = new Date(year, month, Math.min(cd, new Date(year,month+1,0).getDate()));
+    } else {
+      const thisLastDay = new Date(year, month+1, 0).getDate();
+      periodStart = new Date(year, month, cd+1);
+      periodEnd   = new Date(year, month+1, Math.min(cd, new Date(year,month+2,0).getDate()));
+    }
+  }
+  return { start: fmtDate(periodStart), end: fmtDate(periodEnd) };
+}
+
+function fmtDate(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+
+function getCurrentPeriod(){return getPeriodForDate(todayStr());}
+
+function getPeriodLabel(start, end){
+  const s=new Date(start), e=new Date(end);
+  return `${s.getMonth()+1}/${s.getDate()} 〜 ${e.getMonth()+1}/${e.getDate()}`;
+}
+
+function groupByPeriod(recs){
+  const groups=[];
+  const seen=new Set();
+  recs.forEach(r=>{
+    const {start,end}=getPeriodForDate(r.date);
+    const key=start+'_'+end;
+    if(!seen.has(key)){seen.add(key);groups.push({start,end,records:[]});}
+    const g=groups.find(g=>g.start===start&&g.end===end);
+    g.records.push(r);
+  });
+  return groups;
+}
+
+/* ══ Auth ══ */
 async function doLogin(){
   const name=document.getElementById('login-name').value.trim();
   const pin=pins.login||'';
@@ -339,9 +440,9 @@ async function doRegister(){
   }catch(e){err.textContent='通信エラー: '+e.message;pins.reg='';updDots('reg');}
   hideLoading();
 }
-function doLogout(){CU=null;cats=[];records=[];pins.login='';updDots('login');document.getElementById('login-name').value='';document.getElementById('login-err').textContent='';ss('login');}
+function doLogout(){CU=null;cats=[];records=[];closingDay=0;pins.login='';updDots('login');document.getElementById('login-name').value='';document.getElementById('login-err').textContent='';ss('login');}
 
-/* ── Init ── */
+/* ══ Init ══ */
 async function initMain(){
   document.getElementById('main-uname').textContent=CU;
   document.getElementById('main-avatar').textContent=CU.slice(0,2).toUpperCase();
@@ -349,18 +450,48 @@ async function initMain(){
   document.getElementById('memo').value='';
   const now=new Date();calYear=now.getFullYear();calMonth=now.getMonth();
   showLoading('データを読み込み中...');
-  try{cats=(await dbGetCats(CU))||DEFAULTS;records=await dbGetRecords(CU);}catch(e){cats=DEFAULTS;records=[];}
+  try{
+    cats=(await dbGetCats(CU))||DEFAULTS;
+    records=await dbGetRecords(CU);
+    closingDay=await dbGetClosingDay(CU);
+  }catch(e){cats=DEFAULTS;records=[];closingDay=0;}
   hideLoading();
-  renderItemsGrid();updateSummary();renderHistory();renderCalendar();switchTab('input');
+  renderItemsGrid();updateSummary();renderHistory();renderCalendar();renderPeriodBanner();switchTab('input');
+  updateClosingLabel();
 }
 
-/* ── Tabs ── */
+function updateClosingLabel(){
+  const lbl=document.getElementById('main-closing-label');
+  if(lbl)lbl.textContent='締め日：'+(closingDay===0?'末日':closingDay+'日');
+}
+
+/* ══ Period Banner ══ */
+function renderPeriodBanner(){
+  const {start,end}=getCurrentPeriod();
+  const periodRecs=records.filter(r=>r.date>=start&&r.date<=end);
+  let totalYen=0,totalCount=0;
+  periodRecs.forEach(r=>{totalYen+=recYen(r);totalCount+=recTotal(r);});
+  const el=document.getElementById('period-banner');
+  if(!el)return;
+  const label=getPeriodLabel(start,end);
+  el.innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+      <div>
+        <p style="font-size:12px;color:var(--green-dark);margin:0 0 2px;font-weight:500;">📋 今締め期間（${label}）</p>
+        <p style="font-size:13px;color:var(--green-dark);margin:0;">${periodRecs.length}日稼働・合計 ${totalCount.toLocaleString()} 個</p>
+      </div>
+      <p style="font-size:22px;font-weight:600;color:var(--green-dark);margin:0;">${totalYen.toLocaleString()} 円</p>
+    </div>`;
+}
+
+/* ══ Tabs ══ */
 function switchTab(t){
   ['input','calendar','list'].forEach(p=>{document.getElementById('pane-'+p).classList.toggle('hidden',p!==t);document.getElementById('tab-'+p).classList.toggle('active',p===t);});
-  if(t==='calendar')renderCalendar();if(t==='list')renderHistory();
+  if(t==='calendar')renderCalendar();
+  if(t==='list')renderHistory();
 }
 
-/* ── Items ── */
+/* ══ Items ══ */
 function renderItemsGrid(){
   document.getElementById('items-grid').innerHTML=cats.map(cat=>`
     <div class="item-card" style="border-top:3px solid ${CAT_COLORS[cat.id]||'#7F77DD'};">
@@ -386,7 +517,7 @@ function updateSummary(){
 }
 function clearForm(){cats.forEach(cat=>{const el=document.getElementById('cnt-'+cat.id);if(el)el.value=0;});document.getElementById('memo').value='';updateSummary();}
 
-/* ── Save ── */
+/* ══ Save ══ */
 async function saveRecord(){
   const date=document.getElementById('record-date').value;
   if(!date){showToast('日付を選択してください');return;}
@@ -408,55 +539,80 @@ async function saveRecord(){
       records.push({username:CU,date,counts,memo,saved});
       records.sort((a,b)=>b.date.localeCompare(a.date));
     }
-    renderHistory();renderCalendar();showToast('記録を保存しました');
+    renderHistory();renderCalendar();renderPeriodBanner();
+    showToast('記録を保存しました');
   }catch(e){showToast('保存エラー: '+e.message);}
   hideLoading();
 }
 
-/* ── Helpers ── */
+/* ══ Helpers ══ */
 function recYen(r){let y=0;cats.forEach(cat=>y+=((r.counts||{})[cat.id]||0)*cat.price);return y;}
 function recTotal(r){let t=0;cats.forEach(cat=>t+=((r.counts||{})[cat.id]||0));return t;}
 
-/* ── History ── */
+/* ══ History（締め期間グループ表示） ══ */
 function renderHistory(){
   const el=document.getElementById('history-list');
   if(!records.length){el.innerHTML='<p style="font-size:14px;color:var(--text3);text-align:center;padding:2rem 0;">まだ記録がありません</p>';return;}
-  el.innerHTML=records.map(r=>{
-    const tags=cats.map(cat=>{const n=(r.counts||{})[cat.id]||0;return n>0?`<span class="tag ${tagCls(cat.id)}">${cat.name} ${n}個</span>`:''}).join('');
-    return`<div class="record-row">
-      <span style="font-weight:500;min-width:90px;">${r.date}</span>
-      <span style="font-size:12px;color:var(--text3);min-width:34px;">${recTotal(r)}個</span>
-      <div style="display:flex;gap:4px;flex:1;flex-wrap:wrap;">${tags}</div>
-      ${r.memo?`<span style="font-size:11px;color:var(--text2);max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${r.memo}">${r.memo}</span>`:''}
-      <span style="font-weight:500;min-width:68px;text-align:right;color:var(--blue);">${recYen(r).toLocaleString()}円</span>
-      <button class="btn-sm" style="padding:3px 8px;font-size:12px;" onclick="deleteRecord('${r.date}')">削除</button>
+  const groups=groupByPeriod(records);
+  let html='';
+  groups.forEach(g=>{
+    let pYen=0,pCount=0;
+    g.records.forEach(r=>{pYen+=recYen(r);pCount+=recTotal(r);});
+    html+=`<div class="period-header">
+      <div>
+        <p class="ph-title">📋 ${getPeriodLabel(g.start,g.end)}</p>
+        <p class="ph-summary">${g.records.length}日稼働・${pCount.toLocaleString()}個</p>
+      </div>
+      <p class="ph-total">${pYen.toLocaleString()} 円</p>
     </div>`;
-  }).join('');
+    g.records.forEach(r=>{
+      const tags=cats.map(cat=>{const n=(r.counts||{})[cat.id]||0;return n>0?`<span class="tag ${tagCls(cat.id)}">${cat.name} ${n}個</span>`:''}).join('');
+      html+=`<div class="record-row">
+        <span style="font-weight:500;min-width:90px;">${r.date}</span>
+        <span style="font-size:12px;color:var(--text3);min-width:34px;">${recTotal(r)}個</span>
+        <div style="display:flex;gap:4px;flex:1;flex-wrap:wrap;">${tags}</div>
+        ${r.memo?`<span style="font-size:11px;color:var(--text2);max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${r.memo}">${r.memo}</span>`:''}
+        <span style="font-weight:500;min-width:68px;text-align:right;color:var(--blue);">${recYen(r).toLocaleString()}円</span>
+        <button class="btn-sm" style="padding:3px 8px;font-size:12px;" onclick="deleteRecord('${r.date}')">削除</button>
+      </div>`;
+    });
+  });
+  el.innerHTML=html;
 }
+
 async function deleteRecord(date){
   if(!confirm('この記録を削除しますか？'))return;
   showLoading('削除中...');
-  try{await dbDeleteRecord(CU,date);records=records.filter(r=>r.date!==date);renderHistory();renderCalendar();showToast('削除しました');}
+  try{await dbDeleteRecord(CU,date);records=records.filter(r=>r.date!==date);renderHistory();renderCalendar();renderPeriodBanner();showToast('削除しました');}
   catch(e){showToast('削除エラー: '+e.message);}
   hideLoading();
 }
 
-/* ── CSV ── */
+/* ══ CSV ══ */
 function exportCSV(){
   if(!records.length){showToast('記録がありません');return;}
-  const header=['日付',...cats.map(c=>c.name+'(個)'),'合計個数','日額(円)','メモ'].join(',');
-  const rows=records.map(r=>{let yen=0,total=0;const cols=cats.map(cat=>{const n=(r.counts||{})[cat.id]||0;yen+=n*cat.price;total+=n;return n;});return[r.date,...cols,total,yen,`"${r.memo||''}"`].join(',');});
+  const header=['締め期間','日付',...cats.map(c=>c.name+'(個)'),'合計個数','日額(円)','メモ'].join(',');
+  const rows=records.map(r=>{
+    const {start,end}=getPeriodForDate(r.date);
+    let yen=0,total=0;
+    const cols=cats.map(cat=>{const n=(r.counts||{})[cat.id]||0;yen+=n*cat.price;total+=n;return n;});
+    return[`"${getPeriodLabel(start,end)}"`,r.date,...cols,total,yen,`"${r.memo||''}"`].join(',');
+  });
   const blob=new Blob(['\uFEFF'+header+'\n'+rows.join('\n')],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=CU+'_配送記録.csv';a.click();URL.revokeObjectURL(url);
 }
 
-/* ── Calendar ── */
+/* ══ Calendar ══ */
 function calMove(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
 function renderCalendar(){
   const title=document.getElementById('cal-title');if(!title)return;
   title.textContent=calYear+'年'+(calMonth+1)+'月';
   const recMap={};records.forEach(r=>recMap[r.date]=r);
   const today=todayStr();
+  // 締め日
+  const cdActual = closingDay===0 ? new Date(calYear,calMonth+1,0).getDate() : Math.min(closingDay, new Date(calYear,calMonth+1,0).getDate());
+  const closingDateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(cdActual).padStart(2,'0')}`;
+
   const startDow=new Date(calYear,calMonth,1).getDay();
   const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
   const daysInPrev=new Date(calYear,calMonth,0).getDate();
@@ -468,9 +624,10 @@ function renderCalendar(){
     else if(i>=startDow+daysInMonth){day=i-startDow-daysInMonth+1;dateStr=new Date(calYear,calMonth+1,day).toISOString().slice(0,10);isOther=true;}
     else{day=i-startDow+1;dateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;}
     const rec=recMap[dateStr];const isToday=dateStr===today;const hasData=!!rec&&!isOther;
+    const isClosing=dateStr===closingDateStr&&!isOther;
     const dow=i%7;const nc=dow===0?'color:var(--red)':dow===6?'color:var(--blue)':'';
-    cells+=`<div class="cal-day${isOther?' other-month':''}${isToday?' today':''}${hasData?' has-data':''}" onclick="calClick('${dateStr}')">
-      <div class="cal-num" style="${nc}">${day}</div>
+    cells+=`<div class="cal-day${isOther?' other-month':''}${isToday?' today':''}${hasData?' has-data':''}${isClosing?' closing-day':''}" onclick="calClick('${dateStr}')">
+      <div class="cal-num" style="${nc}">${day}${isClosing?'<span style="font-size:9px;color:var(--red);display:block;line-height:1;">締</span>':''}</div>
       ${hasData?`<div class="cal-yen">${recYen(rec).toLocaleString()}円</div><div class="cal-cnt">${recTotal(rec)}個</div>`:''}
     </div>`;
   }
@@ -482,7 +639,8 @@ function calClick(dateStr){
   const el=document.getElementById('cal-detail');
   if(!rec){el.innerHTML=`<div class="card"><p style="font-size:13px;color:var(--text2);margin:0 0 8px;">${dateStr} — 記録なし</p><button class="btn-sm" onclick="jumpToInput('${dateStr}')">この日の記録を入力</button></div>`;return;}
   const tags=cats.map(cat=>{const n=(rec.counts||{})[cat.id]||0;return n>0?`<span class="tag ${tagCls(cat.id)}">${cat.name} ${n}個</span>`:''}).join('');
-  el.innerHTML=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"><span style="font-size:14px;font-weight:500;">${dateStr}</span><span style="font-size:15px;font-weight:500;color:var(--blue);">${recYen(rec).toLocaleString()}円</span></div><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">${tags}</div>${rec.memo?`<p style="font-size:13px;color:var(--text2);margin:0 0 8px;">${rec.memo}</p>`:''}<button class="btn-sm" onclick="jumpToInput('${dateStr}')">編集</button></div>`;
+  const {start,end}=getPeriodForDate(dateStr);
+  el.innerHTML=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span style="font-size:14px;font-weight:500;">${dateStr}</span><span style="font-size:15px;font-weight:500;color:var(--blue);">${recYen(rec).toLocaleString()}円</span></div><p style="font-size:11px;color:var(--text3);margin:0 0 8px;">締め期間: ${getPeriodLabel(start,end)}</p><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">${tags}</div>${rec.memo?`<p style="font-size:13px;color:var(--text2);margin:0 0 8px;">${rec.memo}</p>`:''}<button class="btn-sm" onclick="jumpToInput('${dateStr}')">編集</button></div>`;
 }
 function jumpToInput(dateStr){
   const rec=records.find(r=>r.date===dateStr);
@@ -492,7 +650,35 @@ function jumpToInput(dateStr){
   switchTab('input');
 }
 
-/* ── Settings ── */
+/* ══ Settings ══ */
+function initSettingsScreen(){
+  // 締め日セレクトを初期化
+  const sel=document.getElementById('closing-day-select');
+  sel.innerHTML='<option value="0">月末（末日）</option>';
+  for(let i=1;i<=31;i++){
+    const opt=document.createElement('option');opt.value=i;opt.textContent=i+'日';sel.appendChild(opt);
+  }
+  sel.value=closingDay;
+  renderCatList();
+}
+
+async function saveClosingDay(){
+  const day=parseInt(document.getElementById('closing-day-select').value);
+  const err=document.getElementById('closing-err');
+  showLoading('保存中...');
+  try{
+    await dbSaveClosingDay(CU,day);
+    closingDay=day;
+    updateClosingLabel();
+    renderPeriodBanner();
+    renderHistory();
+    renderCalendar();
+    err.textContent='';
+    showToast('締め日を保存しました');
+  }catch(e){err.textContent='保存エラー: '+e.message;}
+  hideLoading();
+}
+
 function renderCatList(){
   document.getElementById('categories-list').innerHTML=cats.map((cat,i)=>`
     <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--border);">
@@ -542,12 +728,13 @@ async function deleteAccount(){
     await dbDeleteUser(CU);
     await sb(`delivery_records?username=eq.${enc(CU)}`,'DELETE');
     await sb(`categories?username=eq.${enc(CU)}`,'DELETE');
+    localStorage.removeItem('closing_'+CU);
     CU=null;ss('login');
   }catch(e){showToast('削除エラー: '+e.message);}
   hideLoading();
 }
 
-/* ── Toast ── */
+/* ══ Toast ══ */
 let toastTimer=null;
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');if(toastTimer)clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2400);}
 
