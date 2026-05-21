@@ -681,11 +681,30 @@ async function saveClosingDay(){
 
 function renderCatList(){
   document.getElementById('categories-list').innerHTML=cats.map((cat,i)=>`
-    <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--border);">
-      <span style="flex:1;font-size:14px;">${cat.name}</span>
-      <span style="font-size:13px;color:var(--text2);min-width:60px;text-align:right;">${cat.price}円</span>
-      ${cat.fixed?`<span style="font-size:11px;color:var(--text3);">固定</span>`:`<button class="btn-danger" style="padding:3px 8px;font-size:12px;" onclick="removeCategory(${i})">削除</button>`}
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:0.5px solid var(--border);flex-wrap:wrap;">
+      <span style="flex:1;font-size:14px;font-weight:500;min-width:60px;">${cat.name}${cat.fixed?'<span style="font-size:10px;color:var(--text3);font-weight:400;margin-left:4px;">固定</span>':''}</span>
+      <div style="display:flex;align-items:center;gap:6px;">
+        <input type="number" id="price-input-${i}" value="${cat.price}" min="1"
+          style="width:80px;padding:5px 8px;font-size:14px;text-align:right;" />
+        <span style="font-size:13px;color:var(--text2);">円</span>
+        <button class="btn-sm" style="padding:4px 10px;font-size:12px;" onclick="updatePrice(${i})">変更</button>
+        ${!cat.fixed?`<button class="btn-danger" style="padding:4px 8px;font-size:12px;" onclick="removeCategory(${i})">削除</button>`:''}
+      </div>
     </div>`).join('');
+}
+async function updatePrice(i){
+  const input=document.getElementById('price-input-'+i);
+  const newPrice=parseInt(input.value);
+  if(!newPrice||newPrice<=0){showToast('正しい単価を入力してください');return;}
+  const oldPrice=cats[i].price;
+  cats[i].price=newPrice;
+  showLoading('保存中...');
+  try{
+    await dbSaveCats(CU,cats);
+    renderCatList();renderItemsGrid();updateSummary();renderPeriodBanner();
+    showToast(`${cats[i].name}の単価を${newPrice}円に変更しました`);
+  }catch(e){cats[i].price=oldPrice;showToast('保存エラー: '+e.message);}
+  hideLoading();
 }
 async function addCategory(){
   const name=document.getElementById('new-cat-name').value.trim();
