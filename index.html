@@ -4,104 +4,994 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>配送トラッカー</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /*EDITMODE-BEGIN*/
+  /* Defaults are mirrored in JS below */
+  /*EDITMODE-END*/
+
   :root {
-    --bg: #ffffff; --bg2: #f5f5f3; --bg3: #efefed;
-    --text: #1a1a1a; --text2: #6b6b68; --text3: #a0a09c;
-    --border: rgba(0,0,0,0.12); --border2: rgba(0,0,0,0.22);
-    --blue: #185FA5; --blue-light: #E6F1FB; --blue-mid: #378ADD; --blue-dark: #0C447C;
-    --teal-light: #E1F5EE; --teal-dark: #085041;
-    --amber-light: #FAEEDA; --amber-dark: #633806;
-    --purple-light: #EEEDFE; --purple-dark: #3C3489;
-    --green-light: #E8F7EE; --green-dark: #1A6B3C;
-    --red: #E24B4A; --danger: #A32D2D; --danger-border: rgba(163,45,45,0.4);
-    --radius: 8px; --radius-lg: 12px;
+    /* Paper / Ivory aesthetic */
+    --bg:       #F1ECE2;
+    --bg-soft:  #EBE5D8;
+    --paper:    #FBF8F1;
+    --paper-2:  #F6F1E6;
+    --ink:      #1B1814;
+    --ink-2:    #2E2A24;
+    --muted:    #756E60;
+    --muted-2:  #A39C8C;
+    --line:     rgba(27,24,20,0.10);
+    --line-2:   rgba(27,24,20,0.18);
+    --line-3:   rgba(27,24,20,0.30);
+
+    /* Accents */
+    --indigo:        #243E66;   /* sumi-indigo */
+    --indigo-mid:    #3E5C8B;
+    --indigo-deep:   #15243F;
+    --indigo-tint:   #E6EBF3;
+    --matcha:        #3D5C46;   /* tea green */
+    --matcha-tint:   #E7ECDF;
+    --beni:          #9B3A3A;   /* deep red */
+    --beni-tint:     #F1E1DE;
+    --kincha:        #8A5B1F;   /* gold-brown */
+    --kincha-tint:   #F2E6CF;
+    --sumi-tint:     #E2DDCF;
+
+    --r-sm: 4px;
+    --r:    8px;
+    --r-lg: 14px;
+    --r-xl: 22px;
+
+    --shadow-card: 0 1px 0 rgba(27,24,20,0.04), 0 1px 2px rgba(27,24,20,0.04);
+    --shadow-pop:  0 10px 30px -10px rgba(27,24,20,0.25), 0 2px 6px rgba(27,24,20,0.06);
+
+    --font-serif: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+    --font-sans:  "Noto Sans JP", -apple-system, "Hiragino Sans", "Yu Gothic UI", sans-serif;
+    --font-mono:  "DM Mono", ui-monospace, "SF Mono", Menlo, monospace;
   }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1c1c1a; --bg2: #252522; --bg3: #2e2e2b;
-      --text: #f0f0ed; --text2: #a0a09c; --text3: #6b6b68;
-      --border: rgba(255,255,255,0.1); --border2: rgba(255,255,255,0.2);
-      --blue-light: #0c2d4a; --blue-dark: #85b7eb;
-      --teal-light: #062820; --teal-dark: #5dcaa5;
-      --amber-light: #2e1f04; --amber-dark: #fac775;
-      --purple-light: #1e1b3a; --purple-dark: #afa9ec;
-      --green-light: #0d2e1c; --green-dark: #5dcaa5;
-    }
+
+  /* Soft dark mode (manual via [data-theme="dark"]) */
+  [data-theme="dark"] {
+    --bg:       #15130F;
+    --bg-soft:  #1B1813;
+    --paper:    #1F1C16;
+    --paper-2:  #25211A;
+    --ink:      #F2EDE0;
+    --ink-2:    #E0DACA;
+    --muted:    #9B9482;
+    --muted-2:  #6A6457;
+    --line:     rgba(242,237,224,0.08);
+    --line-2:   rgba(242,237,224,0.16);
+    --line-3:   rgba(242,237,224,0.30);
+
+    --indigo:        #8FAAD2;
+    --indigo-mid:    #6E8AB6;
+    --indigo-deep:   #C7D4E8;
+    --indigo-tint:   #1E2A40;
+    --matcha:        #B7CAA0;
+    --matcha-tint:   #1F2A1F;
+    --beni:          #E59999;
+    --beni-tint:     #3A1F1F;
+    --kincha:        #D9B07A;
+    --kincha-tint:   #2D2316;
+    --sumi-tint:     #2A2620;
   }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg3); color: var(--text); min-height: 100vh; }
-  .wrap { max-width: 680px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+
+  /* Sumi (charcoal) palette */
+  [data-palette="sumi"] {
+    --indigo:      #2D2B27;
+    --indigo-mid:  #4A463D;
+    --indigo-deep: #161513;
+    --indigo-tint: #E2DDD0;
+  }
+  [data-palette="sumi"][data-theme="dark"] {
+    --indigo:      #D6CFBE;
+    --indigo-mid:  #B5AE9C;
+    --indigo-deep: #F2ECDD;
+    --indigo-tint: #2A2620;
+  }
+
+  /* Beni (red lacquer) palette */
+  [data-palette="beni"] {
+    --indigo:      #913232;
+    --indigo-mid:  #B85454;
+    --indigo-deep: #5C1F1F;
+    --indigo-tint: #F2E0DC;
+  }
+  [data-palette="beni"][data-theme="dark"] {
+    --indigo:      #E8A6A6;
+    --indigo-mid:  #C68080;
+    --indigo-deep: #F4C9C9;
+    --indigo-tint: #3A1F1F;
+  }
+
+  /* Matcha palette */
+  [data-palette="matcha"] {
+    --indigo:      #3D5C46;
+    --indigo-mid:  #5A7D63;
+    --indigo-deep: #21341E;
+    --indigo-tint: #E7ECDF;
+  }
+  [data-palette="matcha"][data-theme="dark"] {
+    --indigo:      #B7CAA0;
+    --indigo-mid:  #95AB7E;
+    --indigo-deep: #D6E1BF;
+    --indigo-tint: #1F2A1F;
+  }
+
+  html, body { height: 100%; }
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--ink);
+    min-height: 100vh;
+    font-feature-settings: "palt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.55;
+    background-image:
+      radial-gradient(rgba(27,24,20,0.025) 1px, transparent 1px),
+      radial-gradient(rgba(27,24,20,0.018) 1px, transparent 1px);
+    background-size: 38px 38px, 23px 23px;
+    background-position: 0 0, 11px 14px;
+  }
+  [data-theme="dark"] body, body[data-theme="dark"] {
+    background-image:
+      radial-gradient(rgba(242,237,224,0.025) 1px, transparent 1px),
+      radial-gradient(rgba(242,237,224,0.018) 1px, transparent 1px);
+  }
+
+  .wrap { max-width: 720px; margin: 0 auto; padding: clamp(1rem, 2vw, 1.75rem) 1rem 5rem; }
   .hidden { display: none !important; }
-  h3 { font-size: 16px; font-weight: 500; margin: 0 0 1rem; }
-  label { font-size: 13px; color: var(--text2); display: block; margin-bottom: 4px; }
-  input[type=text], input[type=number], input[type=date], textarea, select {
-    width: 100%; padding: 8px 12px; font-size: 14px; border: 0.5px solid var(--border2);
-    border-radius: var(--radius); background: var(--bg); color: var(--text);
-    font-family: inherit; outline: none; transition: border-color .15s;
+
+  /* Typography */
+  .serif { font-family: var(--font-serif); }
+  .mono  { font-family: var(--font-mono); font-feature-settings: "tnum" 1; }
+  .num   { font-variant-numeric: tabular-nums; font-feature-settings: "tnum" 1; }
+
+  h1, h2, h3, .display {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.01em;
   }
-  input:focus, textarea:focus, select:focus { border-color: var(--blue-mid); box-shadow: 0 0 0 3px rgba(55,138,221,0.15); }
-  textarea { min-height: 56px; resize: vertical; }
-  .btn-primary { width: 100%; padding: 10px; background: var(--blue); color: #fff; border: none; border-radius: var(--radius); font-size: 15px; font-weight: 500; cursor: pointer; font-family: inherit; }
-  .btn-primary:hover { background: var(--blue-dark); }
-  .btn-sm { padding: 6px 14px; font-size: 13px; border: 0.5px solid var(--border2); background: transparent; color: var(--text2); border-radius: var(--radius); cursor: pointer; font-family: inherit; }
-  .btn-sm:hover { background: var(--bg2); }
-  .btn-danger { padding: 6px 14px; font-size: 13px; border: 0.5px solid var(--danger-border); background: transparent; color: var(--danger); border-radius: var(--radius); cursor: pointer; font-family: inherit; }
-  .err { font-size: 13px; color: var(--red); margin: 6px 0 0; min-height: 18px; }
-  .card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1rem; }
-  .metric { background: var(--bg2); border-radius: var(--radius); padding: .75rem 1rem; }
-  .metric-label { font-size: 12px; color: var(--text2); margin: 0 0 4px; }
-  .metric-value { font-size: 22px; font-weight: 500; }
-  .tag { font-size: 11px; padding: 2px 7px; border-radius: 99px; font-weight: 500; }
-  .tag.n { background: var(--blue-light); color: var(--blue-dark); }
-  .tag.c { background: var(--teal-light); color: var(--teal-dark); }
-  .tag.col { background: var(--amber-light); color: var(--amber-dark); }
-  .tag.custom { background: var(--purple-light); color: var(--purple-dark); }
-  .divider { border: none; border-top: 0.5px solid var(--border); margin: 1.25rem 0; }
-  .avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--blue-light); display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 14px; color: var(--blue-dark); flex-shrink: 0; }
-  .pin-display { display: flex; gap: 12px; justify-content: center; margin: 1rem 0; }
-  .pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--blue-mid); background: transparent; transition: background .15s; }
-  .pin-dot.filled { background: var(--blue-mid); }
-  .numpad { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; max-width: 240px; margin: 0 auto; }
-  .numpad button { padding: 14px 0; font-size: 20px; font-weight: 500; border: 0.5px solid var(--border2); background: var(--bg); color: var(--text); border-radius: var(--radius); cursor: pointer; font-family: inherit; }
-  .numpad button:hover { background: var(--bg2); }
-  .numpad button:active { transform: scale(.96); }
-  .npc { font-size: 14px !important; color: var(--text2) !important; }
-  .tab-bar { display: flex; border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1.25rem; }
-  .tab-btn { flex: 1; padding: 9px 0; font-size: 13px; font-weight: 500; border: none; background: transparent; color: var(--text2); cursor: pointer; font-family: inherit; border-right: 0.5px solid var(--border); }
-  .tab-btn:last-child { border-right: none; }
-  .tab-btn.active { background: var(--blue); color: #fff; }
-  .item-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; }
-  .cnt-wrap { display: flex; align-items: center; gap: 6px; }
-  .cnt-btn { width: 32px; height: 32px; border-radius: var(--radius); border: 0.5px solid var(--border2); background: var(--bg2); font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--text); flex-shrink: 0; }
-  .cnt-input { width: 64px; text-align: center; font-size: 20px; font-weight: 500; padding: 4px 0; }
-  .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
-  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 3px; }
-  .cal-dow { font-size: 12px; color: var(--text2); text-align: center; padding: 4px 0; font-weight: 500; }
-  .cal-day { border-radius: var(--radius); padding: 4px 3px; min-height: 58px; border: 0.5px solid var(--border); background: var(--bg); cursor: pointer; }
-  .cal-day:hover { background: var(--bg2); }
-  .cal-day.today { border-color: var(--blue-mid); border-width: 1.5px; }
-  .cal-day.has-data { background: var(--blue-light); }
-  .cal-day.has-data:hover { background: #B5D4F4; }
-  .cal-day.other-month { opacity: .35; }
-  .cal-day.closing-day { border-color: var(--red) !important; border-width: 1.5px !important; }
-  .cal-num { font-size: 12px; font-weight: 500; text-align: center; margin-bottom: 2px; }
-  .cal-yen { font-size: 10px; color: var(--blue-dark); text-align: center; line-height: 1.3; }
-  .cal-cnt { font-size: 10px; color: var(--teal-dark); text-align: center; }
-  .record-row { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-bottom: 0.5px solid var(--border); font-size: 14px; flex-wrap: wrap; }
-  .period-header { background: var(--green-light); border: 0.5px solid rgba(26,107,60,0.2); border-radius: var(--radius); padding: 10px 14px; margin: 12px 0 4px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
-  .period-header .ph-title { font-size: 13px; font-weight: 500; color: var(--green-dark); }
-  .period-header .ph-summary { font-size: 13px; color: var(--green-dark); }
-  .period-header .ph-total { font-size: 16px; font-weight: 600; color: var(--green-dark); }
-  .summary-banner { background: var(--green-light); border: 0.5px solid rgba(26,107,60,0.25); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.25rem; }
-  .toast-wrap { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 999; pointer-events: none; }
-  .toast { background: var(--blue); color: #fff; padding: 10px 24px; border-radius: var(--radius); font-size: 14px; opacity: 0; transition: opacity .3s; white-space: nowrap; }
-  .toast.show { opacity: 1; }
-  .loading-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); display: flex; align-items: center; justify-content: center; z-index: 9999; }
-  .loading-box { background: var(--bg); border-radius: var(--radius-lg); padding: 1.5rem 2rem; font-size: 15px; }
-  .items-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px,1fr)); gap: 12px; margin-bottom: 1.25rem; }
-  .summary-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 1.25rem; }
-  @media (max-width: 480px) { .summary-grid { grid-template-columns: 1fr 1fr; } }
+  h3 { font-size: 15px; font-weight: 500; margin: 0 0 1rem; color: var(--ink); letter-spacing: 0.02em; }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    font-weight: 500;
+  }
+
+  /* Form controls */
+  label {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+  input[type=text], input[type=number], input[type=date], textarea, select {
+    width: 100%;
+    padding: 11px 14px;
+    font-size: 15px;
+    border: 1px solid var(--line-2);
+    border-radius: var(--r);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: inherit;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s, background .15s;
+  }
+  input[type=number] { font-variant-numeric: tabular-nums; }
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--indigo);
+    box-shadow: 0 0 0 3px var(--indigo-tint);
+    background: var(--paper);
+  }
+  textarea { min-height: 70px; resize: vertical; line-height: 1.6; }
+
+  select {
+    appearance: none;
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--muted) 50%),
+      linear-gradient(135deg, var(--muted) 50%, transparent 50%);
+    background-position: calc(100% - 18px) 50%, calc(100% - 13px) 50%;
+    background-size: 5px 5px, 5px 5px;
+    background-repeat: no-repeat;
+    padding-right: 32px;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    width: 100%;
+    padding: 13px 16px;
+    background: var(--ink);
+    color: var(--paper);
+    border: 1px solid var(--ink);
+    border-radius: var(--r);
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    font-family: inherit;
+    transition: transform .08s, background .15s;
+  }
+  .btn-primary:hover { background: var(--ink-2); }
+  .btn-primary:active { transform: translateY(1px); }
+
+  .btn-sm {
+    padding: 7px 14px;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    border: 1px solid var(--line-2);
+    background: var(--paper);
+    color: var(--ink-2);
+    border-radius: var(--r);
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 500;
+    transition: background .12s, border-color .12s;
+  }
+  .btn-sm:hover { background: var(--paper-2); border-color: var(--line-3); }
+
+  .btn-ghost {
+    padding: 7px 12px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 500;
+  }
+  .btn-ghost:hover { color: var(--ink); }
+
+  .btn-danger {
+    padding: 9px 16px;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    border: 1px solid rgba(155,58,58,0.35);
+    background: transparent;
+    color: var(--beni);
+    border-radius: var(--r);
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 500;
+  }
+  .btn-danger:hover { background: var(--beni-tint); }
+
+  .err { font-size: 12px; color: var(--beni); margin: 8px 0 0; min-height: 18px; letter-spacing: 0.02em; }
+
+  /* Cards */
+  .card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Metric tiles */
+  .metric {
+    background: var(--paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 14px 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .metric::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--line-2);
+  }
+  .metric.accent::before { background: var(--indigo); }
+  .metric-label {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 6px;
+    font-weight: 500;
+  }
+  .metric-value {
+    font-family: var(--font-serif);
+    font-size: 26px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+  .metric-unit { font-size: 13px; color: var(--muted); margin-left: 4px; font-family: var(--font-sans); font-weight: 400; letter-spacing: 0; }
+
+  /* Tags / Chips */
+  .tag {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 99px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .tag.n     { background: var(--indigo-tint);  color: var(--indigo-deep);  border-color: rgba(36,62,102,0.12); }
+  .tag.c     { background: var(--matcha-tint);  color: var(--matcha);       border-color: rgba(61,92,70,0.18); }
+  .tag.col   { background: var(--kincha-tint);  color: var(--kincha);       border-color: rgba(138,91,31,0.18); }
+  .tag.custom{ background: var(--sumi-tint);    color: var(--ink-2);        border-color: var(--line-2); }
+  .tag-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; opacity: .8; }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 1.25rem 0;
+  }
+  .divider-fancy {
+    text-align: center;
+    margin: 1.5rem 0;
+    color: var(--muted-2);
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    position: relative;
+  }
+  .divider-fancy::before, .divider-fancy::after {
+    content: "";
+    display: inline-block;
+    width: 60px;
+    border-top: 1px solid var(--line-2);
+    vertical-align: middle;
+    margin: 0 12px;
+  }
+
+  /* Avatar */
+  .avatar {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    font-size: 14px;
+    font-family: var(--font-serif);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+  }
+
+  /* PIN */
+  .pin-display {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin: 1.25rem 0;
+  }
+  .pin-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 1.5px solid var(--line-3);
+    background: transparent;
+    transition: all .18s ease;
+  }
+  .pin-dot.filled {
+    background: var(--indigo);
+    border-color: var(--indigo);
+    transform: scale(1.05);
+  }
+  .numpad {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 10px;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+  .numpad button {
+    padding: 16px 0;
+    font-size: 22px;
+    font-weight: 400;
+    font-family: var(--font-serif);
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: var(--r);
+    cursor: pointer;
+    transition: background .1s, transform .08s, border-color .1s;
+    font-variant-numeric: tabular-nums;
+  }
+  .numpad button:hover { background: var(--paper-2); border-color: var(--line-2); }
+  .numpad button:active { transform: scale(.96); background: var(--bg-soft); }
+  .npc {
+    font-size: 11px !important;
+    font-family: var(--font-sans) !important;
+    color: var(--muted) !important;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* Tabs */
+  .tab-bar {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 0;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 12px 0 14px;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: inherit;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color .15s, border-color .15s;
+  }
+  .tab-btn:hover { color: var(--ink-2); }
+  .tab-btn.active {
+    color: var(--ink);
+    border-bottom-color: var(--ink);
+  }
+
+  /* Item cards (input) */
+  .item-card {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 1.1rem 1.1rem 1rem;
+    position: relative;
+    overflow: hidden;
+    transition: border-color .15s, transform .15s;
+  }
+  .item-card:hover { border-color: var(--line-2); }
+  .item-card .item-head {
+    display: flex; align-items: baseline; justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .item-card .item-name {
+    font-family: var(--font-serif);
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+  .item-card .item-price {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .item-card .item-bar {
+    height: 2px;
+    background: var(--line);
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .item-card .item-bar::after {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 28px;
+    background: var(--cat-color, var(--indigo));
+  }
+  .item-card .item-sub {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 10px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+  }
+  .item-card .item-sub b {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    color: var(--ink);
+    font-size: 14px;
+  }
+
+  .cnt-wrap { display: flex; align-items: center; gap: 8px; justify-content: center; }
+  .cnt-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--line-2);
+    background: var(--paper);
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink);
+    flex-shrink: 0;
+    font-family: var(--font-serif);
+    transition: background .12s, transform .08s;
+  }
+  .cnt-btn:hover { background: var(--paper-2); }
+  .cnt-btn:active { transform: scale(.92); }
+  .cnt-input {
+    width: 64px;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 500;
+    font-family: var(--font-serif);
+    padding: 4px 0;
+    border: none !important;
+    background: transparent !important;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .cnt-input:focus { box-shadow: none !important; border: none !important; }
+  .cnt-input::-webkit-outer-spin-button,
+  .cnt-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+  /* Calendar */
+  .cal-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 16px;
+    padding: 4px 0;
+  }
+  .cal-title {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+  .cal-title .yr { color: var(--muted); font-size: 14px; margin-right: 8px; font-weight: 400; }
+  .cal-nav {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1px solid var(--line-2);
+    background: var(--paper);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-2);
+    font-size: 12px;
+    transition: background .12s;
+  }
+  .cal-nav:hover { background: var(--paper-2); }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7,1fr);
+    gap: 4px;
+  }
+  .cal-dow {
+    font-size: 10px;
+    color: var(--muted-2);
+    text-align: center;
+    padding: 6px 0;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .cal-day {
+    border-radius: var(--r);
+    padding: 6px 4px 4px;
+    min-height: 64px;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    cursor: pointer;
+    transition: background .12s, border-color .12s, transform .08s;
+    display: flex;
+    flex-direction: column;
+  }
+  .cal-day:hover { background: var(--paper-2); border-color: var(--line-2); }
+  .cal-day:active { transform: scale(.97); }
+  .cal-day.today {
+    border-color: var(--ink);
+    border-width: 1.5px;
+  }
+  .cal-day.has-data {
+    background: var(--indigo-tint);
+    border-color: rgba(36,62,102,0.18);
+  }
+  .cal-day.has-data:hover { background: #DDE4EF; }
+  [data-theme="dark"] .cal-day.has-data:hover { background: #2A3852; }
+  .cal-day.other-month { opacity: .32; }
+  .cal-day.closing-day {
+    border-color: var(--beni) !important;
+    border-width: 1.5px !important;
+  }
+  .cal-num {
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 2px;
+    font-family: var(--font-serif);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+  .cal-yen {
+    font-size: 10px;
+    color: var(--indigo-deep);
+    text-align: center;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+    font-weight: 500;
+    margin-top: auto;
+  }
+  .cal-cnt {
+    font-size: 9px;
+    color: var(--muted);
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+  }
+  .cal-closing-mark {
+    font-size: 8px;
+    color: var(--beni);
+    display: block;
+    line-height: 1;
+    letter-spacing: 0.05em;
+  }
+
+  /* History */
+  .record-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    font-size: 14px;
+    flex-wrap: wrap;
+  }
+  .record-row:last-child { border-bottom: none; }
+  .rec-date {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    min-width: 100px;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+  .rec-count {
+    font-size: 11px;
+    color: var(--muted);
+    min-width: 40px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.04em;
+  }
+  .rec-yen {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    min-width: 80px;
+    text-align: right;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    font-size: 15px;
+  }
+
+  .period-header {
+    background: var(--matcha-tint);
+    border: 1px solid rgba(61,92,70,0.18);
+    border-radius: var(--r-lg);
+    padding: 14px 18px;
+    margin: 18px 0 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    position: relative;
+  }
+  .period-header .ph-title {
+    font-family: var(--font-serif);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--matcha);
+    letter-spacing: 0.02em;
+  }
+  .period-header .ph-summary {
+    font-size: 11px;
+    color: var(--matcha);
+    opacity: .85;
+    letter-spacing: 0.04em;
+    margin-top: 2px;
+  }
+  .period-header .ph-total {
+    font-family: var(--font-serif);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--matcha);
+    font-variant-numeric: tabular-nums;
+  }
+  .period-header .ph-total .yen { font-size: 13px; margin-left: 2px; opacity: .8; }
+
+  /* Period banner */
+  .summary-banner {
+    background:
+      linear-gradient(135deg, var(--paper) 0%, var(--paper-2) 100%);
+    border: 1px solid var(--line);
+    border-radius: var(--r-xl);
+    padding: 20px 22px;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .summary-banner::before {
+    content: "";
+    position: absolute;
+    top: 0; right: 0;
+    width: 140px; height: 140px;
+    background: radial-gradient(circle at top right, var(--indigo-tint), transparent 70%);
+    opacity: .6;
+    pointer-events: none;
+  }
+
+  /* Toast */
+  .toast-wrap {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    pointer-events: none;
+  }
+  .toast {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 12px 24px;
+    border-radius: var(--r);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    opacity: 0;
+    transition: opacity .3s, transform .3s;
+    white-space: nowrap;
+    transform: translateY(8px);
+    box-shadow: var(--shadow-pop);
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* Loading */
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(27,24,20,0.18);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  .loading-box {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 1.5rem 2.25rem;
+    font-size: 13px;
+    letter-spacing: 0.08em;
+    color: var(--ink);
+    font-family: var(--font-serif);
+    box-shadow: var(--shadow-pop);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .loading-box::before {
+    content: "";
+    width: 14px; height: 14px;
+    border: 1.5px solid var(--line-2);
+    border-top-color: var(--ink);
+    border-radius: 50%;
+    animation: spin .8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Grids */
+  .items-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px,1fr));
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+  @media (max-width: 480px) {
+    .summary-grid { grid-template-columns: 1fr; }
+    .summary-grid .metric { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+    .summary-grid .metric .metric-label { margin: 0; }
+  }
+
+  /* Header */
+  .topbar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 1.75rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .topbar-text { flex: 1; min-width: 100px; }
+  .topbar-text .uname {
+    font-family: var(--font-serif);
+    font-size: 17px;
+    font-weight: 500;
+    margin: 0;
+    letter-spacing: 0.02em;
+  }
+  .topbar-text .closing-label {
+    font-size: 10px;
+    color: var(--muted);
+    margin: 2px 0 0;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  /* Brand mark */
+  .brand {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .brand-mark {
+    width: 44px; height: 44px;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--ink);
+    border-radius: 50%;
+    font-family: var(--font-serif);
+    font-size: 22px;
+    color: var(--ink);
+    font-weight: 500;
+    background: transparent;
+  }
+  .brand-title {
+    font-family: var(--font-serif);
+    font-size: 28px;
+    font-weight: 400;
+    margin: 0;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+  }
+  .brand-subtitle {
+    font-size: 10px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    margin-top: 6px;
+  }
+
+  /* Settings list rows */
+  .cat-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .cat-row:last-child { border-bottom: none; }
+  .cat-row .cat-name {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    min-width: 80px;
+    font-family: var(--font-serif);
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+  .cat-row .cat-fixed {
+    font-size: 9px;
+    color: var(--muted-2);
+    font-weight: 500;
+    margin-left: 6px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-family: var(--font-sans);
+    padding: 2px 6px;
+    border: 1px solid var(--line-2);
+    border-radius: var(--r-sm);
+  }
+
+  /* Cal detail card */
+  #cal-detail .card { background: var(--paper-2); margin-bottom: 0; }
+
+  /* Tweaks panel */
+  #tweaks-panel {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    background: var(--paper);
+    border: 1px solid var(--line-2);
+    border-radius: var(--r-lg);
+    padding: 16px 18px;
+    box-shadow: var(--shadow-pop);
+    z-index: 998;
+    min-width: 240px;
+    font-family: var(--font-sans);
+  }
+  #tweaks-panel .tw-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  #tweaks-panel .tw-title {
+    font-family: var(--font-serif);
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  #tweaks-panel .tw-close {
+    background: none; border: none; color: var(--muted); cursor: pointer; font-size: 14px;
+  }
+  #tweaks-panel .tw-section { margin-bottom: 10px; }
+  #tweaks-panel .tw-section:last-child { margin-bottom: 0; }
+  #tweaks-panel .tw-label {
+    font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 6px;
+  }
+  #tweaks-panel .tw-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  #tweaks-panel .tw-chip {
+    flex: 1;
+    min-width: 0;
+    padding: 6px 8px;
+    border: 1px solid var(--line-2);
+    background: var(--paper);
+    border-radius: var(--r-sm);
+    font-size: 11px;
+    cursor: pointer;
+    color: var(--ink-2);
+    font-family: inherit;
+    letter-spacing: 0.04em;
+    text-align: center;
+  }
+  #tweaks-panel .tw-chip.active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+  #tweaks-panel .tw-swatch {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    padding: 2px;
+  }
+  #tweaks-panel .tw-swatch.active { border-color: var(--ink); }
+  #tweaks-panel .tw-swatch span {
+    display: block;
+    width: 100%; height: 100%;
+    border-radius: 50%;
+    border: 1px solid rgba(27,24,20,0.12);
+  }
+
+  /* Subtle entrance */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+  .card, .item-card, .summary-banner, .topbar { animation: fadeUp .35s ease both; }
+
+  /* Mobile spacing */
+  @media (max-width: 540px) {
+    .wrap { padding: 1rem 0.875rem 4rem; }
+    .card { padding: 1.25rem; }
+    .summary-banner { padding: 16px; }
+    .brand-title { font-size: 24px; }
+  }
 </style>
 </head>
 <body>
@@ -109,12 +999,20 @@
 
   <!-- ログイン -->
   <div id="screen-login">
-    <div style="max-width:340px;margin:0 auto;">
-      <p style="font-size:24px;font-weight:500;margin:0 0 1.5rem;">配送トラッカー</p>
+    <div style="max-width:360px;margin:2.5rem auto 0;">
+      <div class="brand">
+        <div class="brand-mark">配</div>
+        <p class="brand-title">配送トラッカー</p>
+        <p class="brand-subtitle">Delivery Ledger</p>
+      </div>
+
       <div class="card">
-        <h3>ログイン</h3>
-        <div style="margin-bottom:16px;"><label>ユーザー名</label><input type="text" id="login-name" placeholder="名前を入力" /></div>
-        <label style="text-align:center;display:block;margin-bottom:4px;">4桁のPIN</label>
+        <p class="eyebrow" style="margin-bottom:14px;">— Sign In —</p>
+        <div style="margin-bottom:18px;">
+          <label>ユーザー名</label>
+          <input type="text" id="login-name" placeholder="名前を入力" />
+        </div>
+        <label style="text-align:center;">4桁のPIN</label>
         <div class="pin-display"><div class="pin-dot" id="login-d0"></div><div class="pin-dot" id="login-d1"></div><div class="pin-dot" id="login-d2"></div><div class="pin-dot" id="login-d3"></div></div>
         <div class="numpad">
           <button onclick="pi('login','1')">1</button><button onclick="pi('login','2')">2</button><button onclick="pi('login','3')">3</button>
@@ -123,8 +1021,7 @@
           <button onclick="pi('login','del')" class="npc">削除</button><button onclick="pi('login','0')">0</button><button onclick="pi('login','clear')" class="npc">クリア</button>
         </div>
         <p class="err" id="login-err" style="text-align:center;"></p>
-        <hr class="divider">
-        <p style="font-size:13px;color:var(--text2);margin:0 0 10px;">アカウントをお持ちでない方</p>
+        <div class="divider-fancy">OR</div>
         <button class="btn-sm" style="width:100%;" onclick="ss('register')">新規登録</button>
       </div>
     </div>
@@ -132,11 +1029,18 @@
 
   <!-- 新規登録 -->
   <div id="screen-register" class="hidden">
-    <div style="max-width:340px;margin:0 auto;">
-      <p style="font-size:24px;font-weight:500;margin:0 0 1.5rem;">新規登録</p>
+    <div style="max-width:360px;margin:2.5rem auto 0;">
+      <div class="brand">
+        <div class="brand-mark">新</div>
+        <p class="brand-title">新規登録</p>
+        <p class="brand-subtitle">Create Account</p>
+      </div>
       <div class="card">
-        <div style="margin-bottom:16px;"><label>ユーザー名</label><input type="text" id="reg-name" placeholder="例：田中 太郎" /></div>
-        <label style="text-align:center;display:block;margin-bottom:4px;">4桁のPINを設定</label>
+        <div style="margin-bottom:18px;">
+          <label>ユーザー名</label>
+          <input type="text" id="reg-name" placeholder="例：田中 太郎" />
+        </div>
+        <label style="text-align:center;">4桁のPINを設定</label>
         <div class="pin-display"><div class="pin-dot" id="reg-d0"></div><div class="pin-dot" id="reg-d1"></div><div class="pin-dot" id="reg-d2"></div><div class="pin-dot" id="reg-d3"></div></div>
         <div class="numpad">
           <button onclick="pi('reg','1')">1</button><button onclick="pi('reg','2')">2</button><button onclick="pi('reg','3')">3</button>
@@ -145,7 +1049,7 @@
           <button onclick="pi('reg','del')" class="npc">削除</button><button onclick="pi('reg','0')">0</button><button onclick="pi('reg','clear')" class="npc">クリア</button>
         </div>
         <p class="err" id="reg-err" style="text-align:center;"></p>
-        <hr class="divider">
+        <div class="divider-fancy">OR</div>
         <button class="btn-sm" style="width:100%;" onclick="ss('login')">ログインに戻る</button>
       </div>
     </div>
@@ -153,11 +1057,14 @@
 
   <!-- メイン -->
   <div id="screen-main" class="hidden">
-    <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;flex-wrap:wrap;">
+    <div class="topbar">
       <div class="avatar" id="main-avatar">--</div>
-      <div style="flex:1;"><p style="font-size:15px;font-weight:500;margin:0;" id="main-uname">--</p><p style="font-size:12px;color:var(--text2);margin:0;" id="main-closing-label">締め日：末日</p></div>
+      <div class="topbar-text">
+        <p class="uname" id="main-uname">--</p>
+        <p class="closing-label" id="main-closing-label">締め日 — 末日</p>
+      </div>
       <button class="btn-sm" onclick="ss('settings')">設定</button>
-      <button class="btn-sm" onclick="doLogout()">ログアウト</button>
+      <button class="btn-ghost" onclick="doLogout()">ログアウト</button>
     </div>
 
     <!-- 当締め期間バナー -->
@@ -166,22 +1073,25 @@
     <div class="tab-bar">
       <button class="tab-btn active" id="tab-input" onclick="switchTab('input')">記録入力</button>
       <button class="tab-btn" id="tab-calendar" onclick="switchTab('calendar')">カレンダー</button>
-      <button class="tab-btn" id="tab-list" onclick="switchTab('list')">一覧</button>
+      <button class="tab-btn" id="tab-list" onclick="switchTab('list')">記録一覧</button>
     </div>
 
     <!-- 入力 -->
     <div id="pane-input">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.25rem;">
-        <label style="margin:0;white-space:nowrap;font-size:13px;color:var(--text2);">記録日</label>
-        <input type="date" id="record-date" style="flex:1;" />
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:1.25rem;">
+        <label style="margin:0;white-space:nowrap;">記録日</label>
+        <input type="date" id="record-date" style="flex:1;max-width:240px;" />
       </div>
       <div class="items-grid" id="items-grid"></div>
       <div class="summary-grid">
-        <div class="metric"><p class="metric-label">合計個数</p><p class="metric-value" id="total-count">0 個</p></div>
-        <div class="metric"><p class="metric-label">種別数</p><p class="metric-value" id="type-count">0 種</p></div>
-        <div class="metric"><p class="metric-label">本日の日額</p><p class="metric-value" style="color:var(--blue);" id="total-yen">0 円</p></div>
+        <div class="metric"><p class="metric-label">合計個数</p><p class="metric-value" id="total-count">0<span class="metric-unit">個</span></p></div>
+        <div class="metric"><p class="metric-label">種別数</p><p class="metric-value" id="type-count">0<span class="metric-unit">種</span></p></div>
+        <div class="metric accent"><p class="metric-label">本日の日額</p><p class="metric-value" id="total-yen" style="color:var(--indigo);">0<span class="metric-unit">円</span></p></div>
       </div>
-      <div style="margin-bottom:1.25rem;"><label>メモ（任意）</label><textarea id="memo" placeholder="特記事項など..."></textarea></div>
+      <div style="margin-bottom:1.5rem;">
+        <label>メモ（任意）</label>
+        <textarea id="memo" placeholder="特記事項など..."></textarea>
+      </div>
       <div style="display:flex;gap:10px;">
         <button class="btn-primary" onclick="saveRecord()">この日の記録を保存</button>
         <button class="btn-sm" onclick="clearForm()">クリア</button>
@@ -191,25 +1101,25 @@
     <!-- カレンダー -->
     <div id="pane-calendar" class="hidden">
       <div class="cal-header">
-        <button class="btn-sm" onclick="calMove(-1)">◀</button>
-        <span id="cal-title" style="font-size:15px;font-weight:500;"></span>
-        <button class="btn-sm" onclick="calMove(1)">▶</button>
+        <button class="cal-nav" onclick="calMove(-1)">◀</button>
+        <span id="cal-title" class="cal-title"></span>
+        <button class="cal-nav" onclick="calMove(1)">▶</button>
       </div>
-      <div class="cal-grid" style="margin-bottom:3px;">
-        <div class="cal-dow" style="color:var(--red);">日</div>
-        <div class="cal-dow">月</div><div class="cal-dow">火</div><div class="cal-dow">水</div><div class="cal-dow">木</div><div class="cal-dow">金</div>
-        <div class="cal-dow" style="color:var(--blue);">土</div>
+      <div class="cal-grid" style="margin-bottom:6px;">
+        <div class="cal-dow" style="color:var(--beni);">SUN</div>
+        <div class="cal-dow">MON</div><div class="cal-dow">TUE</div><div class="cal-dow">WED</div><div class="cal-dow">THU</div><div class="cal-dow">FRI</div>
+        <div class="cal-dow" style="color:var(--indigo);">SAT</div>
       </div>
       <div class="cal-grid" id="cal-body"></div>
-      <p style="font-size:11px;color:var(--text3);margin:6px 0 0;text-align:right;">🔴 枠 = 締め日</p>
-      <div id="cal-detail" style="margin-top:1rem;"></div>
+      <p style="font-size:10px;color:var(--muted-2);margin:10px 0 0;text-align:right;letter-spacing:0.1em;">紅枠 = 締め日</p>
+      <div id="cal-detail" style="margin-top:1.25rem;"></div>
     </div>
 
     <!-- 一覧 -->
     <div id="pane-list" class="hidden">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-        <span style="font-size:15px;font-weight:500;">締め期間別・記録一覧</span>
-        <button class="btn-sm" onclick="exportCSV()">CSVで出力</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+        <span class="serif" style="font-size:18px;font-weight:500;letter-spacing:0.02em;">締め期間別 記録一覧</span>
+        <button class="btn-sm" onclick="exportCSV()">CSV出力</button>
       </div>
       <div id="history-list"></div>
     </div>
@@ -219,13 +1129,13 @@
   <div id="screen-settings" class="hidden">
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:1.5rem;">
       <button class="btn-sm" onclick="ss('main')">← 戻る</button>
-      <span style="font-size:16px;font-weight:500;">設定</span>
+      <span class="serif" style="font-size:18px;font-weight:500;letter-spacing:0.04em;">設定</span>
     </div>
 
     <!-- 締め日設定 -->
     <div class="card">
       <h3>締め日の設定</h3>
-      <p style="font-size:13px;color:var(--text2);margin:0 0 12px;">毎月の締め日を設定します。翌月の同日の前日までが1締め期間になります。</p>
+      <p style="font-size:12px;color:var(--muted);margin:0 0 14px;line-height:1.7;">毎月の締め日を設定します。翌月の同日の前日までが 1 締め期間になります。</p>
       <label>締め日</label>
       <select id="closing-day-select" style="margin-bottom:12px;">
         <option value="0">月末（末日）</option>
@@ -237,10 +1147,10 @@
     <!-- 種別管理 -->
     <div class="card">
       <h3>荷物種別の管理</h3>
-      <div id="categories-list" style="margin-bottom:12px;"></div>
-      <hr class="divider" style="margin:12px 0;">
-      <p style="font-size:13px;font-weight:500;color:var(--text2);margin:0 0 10px;">新しい種別を追加</p>
-      <div style="display:grid;grid-template-columns:1fr 110px;gap:8px;margin-bottom:8px;">
+      <div id="categories-list" style="margin-bottom:6px;"></div>
+      <hr class="divider">
+      <p class="eyebrow" style="margin-bottom:12px;">新しい種別を追加</p>
+      <div style="display:grid;grid-template-columns:1fr 120px;gap:10px;margin-bottom:12px;">
         <div><label>種別名</label><input type="text" id="new-cat-name" placeholder="例：大型" /></div>
         <div><label>単価（円）</label><input type="number" id="new-cat-price" placeholder="300" min="0" /></div>
       </div>
@@ -251,15 +1161,15 @@
     <!-- PIN変更 -->
     <div class="card">
       <h3>PIN変更</h3>
-      <label style="text-align:center;display:block;margin-bottom:4px;">現在のPIN</label>
+      <label style="text-align:center;">現在のPIN</label>
       <div class="pin-display"><div class="pin-dot" id="cur-d0"></div><div class="pin-dot" id="cur-d1"></div><div class="pin-dot" id="cur-d2"></div><div class="pin-dot" id="cur-d3"></div></div>
-      <div class="numpad" style="margin-bottom:16px;">
+      <div class="numpad" style="margin-bottom:18px;">
         <button onclick="pi('cur','1')">1</button><button onclick="pi('cur','2')">2</button><button onclick="pi('cur','3')">3</button>
         <button onclick="pi('cur','4')">4</button><button onclick="pi('cur','5')">5</button><button onclick="pi('cur','6')">6</button>
         <button onclick="pi('cur','7')">7</button><button onclick="pi('cur','8')">8</button><button onclick="pi('cur','9')">9</button>
         <button onclick="pi('cur','del')" class="npc">削除</button><button onclick="pi('cur','0')">0</button><button onclick="pi('cur','clear')" class="npc">クリア</button>
       </div>
-      <label style="text-align:center;display:block;margin-bottom:4px;">新しいPIN</label>
+      <label style="text-align:center;">新しいPIN</label>
       <div class="pin-display"><div class="pin-dot" id="new-d0"></div><div class="pin-dot" id="new-d1"></div><div class="pin-dot" id="new-d2"></div><div class="pin-dot" id="new-d3"></div></div>
       <div class="numpad">
         <button onclick="pi('new','1')">1</button><button onclick="pi('new','2')">2</button><button onclick="pi('new','3')">3</button>
@@ -272,7 +1182,7 @@
 
     <div class="card">
       <h3>アカウント削除</h3>
-      <p style="font-size:13px;color:var(--text2);margin:0 0 12px;">すべての記録と設定が削除されます。この操作は取り消せません。</p>
+      <p style="font-size:12px;color:var(--muted);margin:0 0 14px;line-height:1.7;">すべての記録と設定が削除されます。この操作は取り消せません。</p>
       <button class="btn-danger" onclick="deleteAccount()">アカウントを削除する</button>
     </div>
   </div>
@@ -280,15 +1190,81 @@
 
 <div class="toast-wrap"><div class="toast" id="toast"></div></div>
 
+<!-- Tweaks panel (toggled by host) -->
+<div id="tweaks-panel" style="display:none;">
+  <div class="tw-header">
+    <span class="tw-title">Tweaks</span>
+    <button class="tw-close" onclick="closeTweaks()">✕</button>
+  </div>
+  <div class="tw-section">
+    <div class="tw-label">アクセント</div>
+    <div class="tw-row" id="tw-palette">
+      <button class="tw-swatch active" data-pal="indigo" title="藍"><span style="background:#243E66"></span></button>
+      <button class="tw-swatch" data-pal="sumi"   title="墨"><span style="background:#2D2B27"></span></button>
+      <button class="tw-swatch" data-pal="matcha" title="抹茶"><span style="background:#3D5C46"></span></button>
+      <button class="tw-swatch" data-pal="beni"   title="紅"><span style="background:#913232"></span></button>
+    </div>
+  </div>
+  <div class="tw-section">
+    <div class="tw-label">テーマ</div>
+    <div class="tw-row" id="tw-theme">
+      <button class="tw-chip active" data-theme="light">和紙</button>
+      <button class="tw-chip" data-theme="dark">墨夜</button>
+    </div>
+  </div>
+</div>
+
 <script>
+const TWEAKS_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "palette": "indigo",
+  "theme": "light"
+}/*EDITMODE-END*/;
+
 const SUPABASE_URL = 'https://pygoifocbqcrhwanhldv.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InB5Z29pZm9jYnFjcmh3YW5obGR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkwOTUxODQsImV4cCI6MjA5NDY3MTE4NH0.U3xJIkbcBp_ifGNq1ehucjsKUQ-0DjfplHaU1K-HeBM';
 
 const DEFAULTS = [{id:'normal',name:'通常',price:155,fixed:true},{id:'cool',name:'クール',price:235,fixed:true},{id:'collect',name:'コレクト',price:232,fixed:true}];
-const CAT_COLORS = {normal:'#378ADD',cool:'#1D9E75',collect:'#BA7517'};
-let CU=null, cats=[], records=[], closingDay=0; // 0=末日
+const CAT_COLORS = {normal:'var(--indigo)',cool:'var(--matcha)',collect:'var(--kincha)'};
+let CU=null, cats=[], records=[], closingDay=0;
 const pins={};
 let calYear, calMonth;
+let tweaks = {...TWEAKS_DEFAULTS};
+
+/* ══ Tweaks panel ══ */
+function applyTweaks() {
+  document.documentElement.setAttribute('data-palette', tweaks.palette);
+  document.documentElement.setAttribute('data-theme', tweaks.theme);
+  document.querySelectorAll('#tw-palette .tw-swatch').forEach(b => {
+    b.classList.toggle('active', b.dataset.pal === tweaks.palette);
+  });
+  document.querySelectorAll('#tw-theme .tw-chip').forEach(b => {
+    b.classList.toggle('active', b.dataset.theme === tweaks.theme);
+  });
+}
+function setTweak(key, val) {
+  tweaks[key] = val;
+  applyTweaks();
+  try { window.parent.postMessage({type:'__edit_mode_set_keys', edits:{[key]:val}}, '*'); } catch(e){}
+}
+function openTweaks(){ document.getElementById('tweaks-panel').style.display='block'; }
+function closeTweaks(){
+  document.getElementById('tweaks-panel').style.display='none';
+  try { window.parent.postMessage({type:'__edit_mode_dismissed'}, '*'); } catch(e){}
+}
+window.addEventListener('message', e => {
+  if (!e.data || typeof e.data !== 'object') return;
+  if (e.data.type === '__activate_edit_mode')   openTweaks();
+  if (e.data.type === '__deactivate_edit_mode') closeTweaks();
+});
+try { window.parent.postMessage({type:'__edit_mode_available'}, '*'); } catch(e){}
+
+document.addEventListener('click', e => {
+  const sw = e.target.closest('#tw-palette .tw-swatch');
+  if (sw) { setTweak('palette', sw.dataset.pal); return; }
+  const ch = e.target.closest('#tw-theme .tw-chip');
+  if (ch) { setTweak('theme', ch.dataset.theme); return; }
+});
+applyTweaks();
 
 /* ══ Supabase ══ */
 async function sb(path, method='GET', body=null) {
@@ -310,7 +1286,6 @@ async function dbDeleteRecord(u,date){return sb(`delivery_records?username=eq.${
 async function dbGetCats(u){const r=await sb(`categories?username=eq.${enc(u)}&select=*`);return r[0]?r[0].data:null;}
 async function dbSaveCats(u,data){const ex=await sb(`categories?username=eq.${enc(u)}&select=id`);if(ex.length)return sb(`categories?username=eq.${enc(u)}`,'PATCH',{data});return sb('categories','POST',{username:u,data});}
 
-/* 締め日はusersテーブルのclosing_dayカラムに保存（なければlocalStorageで代替） */
 async function dbSaveClosingDay(u,day){
   try{ await sb(`users?username=eq.${enc(u)}`,'PATCH',{closing_day:day}); }
   catch(e){ localStorage.setItem('closing_'+u, day); }
@@ -345,53 +1320,38 @@ function todayStr(){return new Date().toISOString().slice(0,10);}
 function showLoading(msg='処理中...'){let el=document.getElementById('lov');if(!el){el=document.createElement('div');el.id='lov';el.className='loading-overlay';document.body.appendChild(el);}el.innerHTML=`<div class="loading-box">${msg}</div>`;el.classList.remove('hidden');}
 function hideLoading(){const el=document.getElementById('lov');if(el)el.classList.add('hidden');}
 
-/* ══ 締め期間計算 ══ */
-// closingDay: 0=末日, 1〜31=その日
-// 締め期間: 前月締め日+1 〜 当月締め日
+/* ══ 締め期間 ══ */
 function getClosingDate(year, month, day) {
-  // dayが0=末日
-  if(day===0) return new Date(year, month+1, 0); // 月末
+  if(day===0) return new Date(year, month+1, 0);
   const lastDay = new Date(year, month+1, 0).getDate();
   return new Date(year, month, Math.min(day, lastDay));
 }
-
 function getPeriodForDate(dateStr) {
-  // dateStrの属する締め期間の start〜end を返す
   const d = new Date(dateStr);
   const year = d.getFullYear(), month = d.getMonth(), date = d.getDate();
   const cd = closingDay;
-
   let periodEnd, periodStart;
   if(cd===0){
-    // 末日締め: 1日〜末日
     periodStart = new Date(year, month, 1);
     periodEnd   = new Date(year, month+1, 0);
   } else {
-    // cd日締め: 前月cd+1日 〜 今月cd日
-    // dateがcd日以前なら「前月cd+1 〜 今月cd」
-    // dateがcd日より後なら「今月cd+1 〜 来月cd」
     if(date <= cd){
       const prevLastDay = new Date(year, month, 0).getDate();
       periodStart = new Date(year, month-1, Math.min(cd+1, prevLastDay));
       periodEnd   = new Date(year, month, Math.min(cd, new Date(year,month+1,0).getDate()));
     } else {
-      const thisLastDay = new Date(year, month+1, 0).getDate();
       periodStart = new Date(year, month, cd+1);
       periodEnd   = new Date(year, month+1, Math.min(cd, new Date(year,month+2,0).getDate()));
     }
   }
   return { start: fmtDate(periodStart), end: fmtDate(periodEnd) };
 }
-
 function fmtDate(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
-
 function getCurrentPeriod(){return getPeriodForDate(todayStr());}
-
 function getPeriodLabel(start, end){
   const s=new Date(start), e=new Date(end);
-  return `${s.getMonth()+1}/${s.getDate()} 〜 ${e.getMonth()+1}/${e.getDate()}`;
+  return `${s.getMonth()+1}/${s.getDate()} — ${e.getMonth()+1}/${e.getDate()}`;
 }
-
 function groupByPeriod(recs){
   const groups=[];
   const seen=new Set();
@@ -462,7 +1422,7 @@ async function initMain(){
 
 function updateClosingLabel(){
   const lbl=document.getElementById('main-closing-label');
-  if(lbl)lbl.textContent='締め日：'+(closingDay===0?'末日':closingDay+'日');
+  if(lbl)lbl.textContent='締め日 — '+(closingDay===0?'末日':closingDay+'日');
 }
 
 /* ══ Period Banner ══ */
@@ -475,12 +1435,16 @@ function renderPeriodBanner(){
   if(!el)return;
   const label=getPeriodLabel(start,end);
   el.innerHTML=`
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:14px;position:relative;">
       <div>
-        <p style="font-size:12px;color:var(--green-dark);margin:0 0 2px;font-weight:500;">📋 今締め期間（${label}）</p>
-        <p style="font-size:13px;color:var(--green-dark);margin:0;">${periodRecs.length}日稼働・合計 ${totalCount.toLocaleString()} 個</p>
+        <p class="eyebrow" style="margin-bottom:6px;">今期 — Current Period</p>
+        <p class="serif" style="font-size:18px;font-weight:500;letter-spacing:0.02em;margin:0 0 4px;">${label}</p>
+        <p style="font-size:11px;color:var(--muted);margin:0;letter-spacing:0.06em;"><span class="num">${periodRecs.length}</span> 日稼働 · 計 <span class="num">${totalCount.toLocaleString()}</span> 個</p>
       </div>
-      <p style="font-size:22px;font-weight:600;color:var(--green-dark);margin:0;">${totalYen.toLocaleString()} 円</p>
+      <div style="text-align:right;">
+        <p class="eyebrow" style="margin-bottom:4px;">合計</p>
+        <p class="serif num" style="font-size:32px;font-weight:500;line-height:1;letter-spacing:-0.01em;margin:0;color:var(--ink);">${totalYen.toLocaleString()}<span style="font-size:14px;color:var(--muted);margin-left:4px;font-family:var(--font-sans);">円</span></p>
+      </div>
     </div>`;
 }
 
@@ -494,15 +1458,18 @@ function switchTab(t){
 /* ══ Items ══ */
 function renderItemsGrid(){
   document.getElementById('items-grid').innerHTML=cats.map(cat=>`
-    <div class="item-card" style="border-top:3px solid ${CAT_COLORS[cat.id]||'#7F77DD'};">
-      <p style="font-size:14px;font-weight:500;margin:0 0 2px;">${cat.name}</p>
-      <p style="font-size:12px;color:var(--text2);margin:0 0 10px;">${cat.price}円 / 個</p>
+    <div class="item-card" style="--cat-color:${CAT_COLORS[cat.id]||'var(--kincha)'};">
+      <div class="item-head">
+        <div class="item-name">${cat.name}</div>
+        <div class="item-price num">¥${cat.price}<span style="opacity:.6;"> / 個</span></div>
+      </div>
+      <div class="item-bar"></div>
       <div class="cnt-wrap">
         <button class="cnt-btn" onclick="change('${cat.id}',-1)">−</button>
         <input class="cnt-input" type="number" id="cnt-${cat.id}" value="0" min="0" oninput="updateSummary()" />
         <button class="cnt-btn" onclick="change('${cat.id}',1)">＋</button>
       </div>
-      <p style="font-size:12px;color:var(--text2);margin:8px 0 0;text-align:right;" id="sub-${cat.id}">0円</p>
+      <p class="item-sub"><b id="sub-${cat.id}">0</b><span style="margin-left:2px;">円</span></p>
     </div>`).join('');
 }
 function tagCls(id){return{normal:'n',cool:'c',collect:'col'}[id]||'custom';}
@@ -510,10 +1477,10 @@ function getVal(id){const el=document.getElementById('cnt-'+id);return el?Math.m
 function change(id,d){const el=document.getElementById('cnt-'+id);if(!el)return;el.value=Math.max(0,(parseInt(el.value)||0)+d);updateSummary();}
 function updateSummary(){
   let total=0,yen=0,types=0;
-  cats.forEach(cat=>{const n=getVal(cat.id),s=n*cat.price;total+=n;yen+=s;if(n>0)types++;const sub=document.getElementById('sub-'+cat.id);if(sub)sub.textContent=s.toLocaleString()+'円';});
-  document.getElementById('total-count').textContent=total.toLocaleString()+' 個';
-  document.getElementById('type-count').textContent=types+' 種';
-  document.getElementById('total-yen').textContent=yen.toLocaleString()+' 円';
+  cats.forEach(cat=>{const n=getVal(cat.id),s=n*cat.price;total+=n;yen+=s;if(n>0)types++;const sub=document.getElementById('sub-'+cat.id);if(sub)sub.textContent=s.toLocaleString();});
+  document.getElementById('total-count').innerHTML=total.toLocaleString()+'<span class="metric-unit">個</span>';
+  document.getElementById('type-count').innerHTML=types+'<span class="metric-unit">種</span>';
+  document.getElementById('total-yen').innerHTML=yen.toLocaleString()+'<span class="metric-unit">円</span>';
 }
 function clearForm(){cats.forEach(cat=>{const el=document.getElementById('cnt-'+cat.id);if(el)el.value=0;});document.getElementById('memo').value='';updateSummary();}
 
@@ -549,10 +1516,10 @@ async function saveRecord(){
 function recYen(r){let y=0;cats.forEach(cat=>y+=((r.counts||{})[cat.id]||0)*cat.price);return y;}
 function recTotal(r){let t=0;cats.forEach(cat=>t+=((r.counts||{})[cat.id]||0));return t;}
 
-/* ══ History（締め期間グループ表示） ══ */
+/* ══ History ══ */
 function renderHistory(){
   const el=document.getElementById('history-list');
-  if(!records.length){el.innerHTML='<p style="font-size:14px;color:var(--text3);text-align:center;padding:2rem 0;">まだ記録がありません</p>';return;}
+  if(!records.length){el.innerHTML='<p style="font-size:13px;color:var(--muted-2);text-align:center;padding:3rem 0;letter-spacing:0.04em;">— まだ記録がありません —</p>';return;}
   const groups=groupByPeriod(records);
   let html='';
   groups.forEach(g=>{
@@ -560,22 +1527,24 @@ function renderHistory(){
     g.records.forEach(r=>{pYen+=recYen(r);pCount+=recTotal(r);});
     html+=`<div class="period-header">
       <div>
-        <p class="ph-title">📋 ${getPeriodLabel(g.start,g.end)}</p>
-        <p class="ph-summary">${g.records.length}日稼働・${pCount.toLocaleString()}個</p>
+        <p class="ph-title">${getPeriodLabel(g.start,g.end)}</p>
+        <p class="ph-summary">${g.records.length}日稼働 · ${pCount.toLocaleString()}個</p>
       </div>
-      <p class="ph-total">${pYen.toLocaleString()} 円</p>
+      <p class="ph-total num">${pYen.toLocaleString()}<span class="yen">円</span></p>
     </div>`;
+    html+=`<div class="card" style="padding:0.25rem 1.5rem;margin-bottom:1.25rem;">`;
     g.records.forEach(r=>{
-      const tags=cats.map(cat=>{const n=(r.counts||{})[cat.id]||0;return n>0?`<span class="tag ${tagCls(cat.id)}">${cat.name} ${n}個</span>`:''}).join('');
+      const tags=cats.map(cat=>{const n=(r.counts||{})[cat.id]||0;return n>0?`<span class="tag ${tagCls(cat.id)}"><span class="tag-dot"></span>${cat.name} ${n}個</span>`:''}).join('');
       html+=`<div class="record-row">
-        <span style="font-weight:500;min-width:90px;">${r.date}</span>
-        <span style="font-size:12px;color:var(--text3);min-width:34px;">${recTotal(r)}個</span>
-        <div style="display:flex;gap:4px;flex:1;flex-wrap:wrap;">${tags}</div>
-        ${r.memo?`<span style="font-size:11px;color:var(--text2);max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="${r.memo}">${r.memo}</span>`:''}
-        <span style="font-weight:500;min-width:68px;text-align:right;color:var(--blue);">${recYen(r).toLocaleString()}円</span>
-        <button class="btn-sm" style="padding:3px 8px;font-size:12px;" onclick="deleteRecord('${r.date}')">削除</button>
+        <span class="rec-date">${r.date.slice(5).replace('-','/')}</span>
+        <span class="rec-count">${recTotal(r)}個</span>
+        <div style="display:flex;gap:5px;flex:1;flex-wrap:wrap;">${tags}</div>
+        ${r.memo?`<span style="font-size:11px;color:var(--muted);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-style:italic;" title="${r.memo}">「${r.memo}」</span>`:''}
+        <span class="rec-yen num">${recYen(r).toLocaleString()}<span style="font-size:11px;color:var(--muted);font-weight:400;margin-left:2px;">円</span></span>
+        <button class="btn-ghost" style="padding:2px 8px;font-size:11px;color:var(--beni);" onclick="deleteRecord('${r.date}')">削除</button>
       </div>`;
     });
+    html+=`</div>`;
   });
   el.innerHTML=html;
 }
@@ -606,10 +1575,9 @@ function exportCSV(){
 function calMove(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
 function renderCalendar(){
   const title=document.getElementById('cal-title');if(!title)return;
-  title.textContent=calYear+'年'+(calMonth+1)+'月';
+  title.innerHTML=`<span class="yr">${calYear}</span>${calMonth+1}<span style="font-size:14px;color:var(--muted);margin-left:2px;">月</span>`;
   const recMap={};records.forEach(r=>recMap[r.date]=r);
   const today=todayStr();
-  // 締め日
   const cdActual = closingDay===0 ? new Date(calYear,calMonth+1,0).getDate() : Math.min(closingDay, new Date(calYear,calMonth+1,0).getDate());
   const closingDateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(cdActual).padStart(2,'0')}`;
 
@@ -620,15 +1588,15 @@ function renderCalendar(){
   let cells='';
   for(let i=0;i<rows*7;i++){
     let day,dateStr,isOther=false;
-    if(i<startDow){day=daysInPrev-(startDow-1-i);dateStr=new Date(calYear,calMonth-1,day).toISOString().slice(0,10);isOther=true;}
-    else if(i>=startDow+daysInMonth){day=i-startDow-daysInMonth+1;dateStr=new Date(calYear,calMonth+1,day).toISOString().slice(0,10);isOther=true;}
+    if(i<startDow){day=daysInPrev-(startDow-1-i);dateStr=fmtDate(new Date(calYear,calMonth-1,day));isOther=true;}
+    else if(i>=startDow+daysInMonth){day=i-startDow-daysInMonth+1;dateStr=fmtDate(new Date(calYear,calMonth+1,day));isOther=true;}
     else{day=i-startDow+1;dateStr=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;}
     const rec=recMap[dateStr];const isToday=dateStr===today;const hasData=!!rec&&!isOther;
     const isClosing=dateStr===closingDateStr&&!isOther;
-    const dow=i%7;const nc=dow===0?'color:var(--red)':dow===6?'color:var(--blue)':'';
+    const dow=i%7;const nc=dow===0?'color:var(--beni)':dow===6?'color:var(--indigo)':'';
     cells+=`<div class="cal-day${isOther?' other-month':''}${isToday?' today':''}${hasData?' has-data':''}${isClosing?' closing-day':''}" onclick="calClick('${dateStr}')">
-      <div class="cal-num" style="${nc}">${day}${isClosing?'<span style="font-size:9px;color:var(--red);display:block;line-height:1;">締</span>':''}</div>
-      ${hasData?`<div class="cal-yen">${recYen(rec).toLocaleString()}円</div><div class="cal-cnt">${recTotal(rec)}個</div>`:''}
+      <div class="cal-num" style="${nc}">${day}${isClosing?'<span class="cal-closing-mark">締</span>':''}</div>
+      ${hasData?`<div class="cal-yen num">${recYen(rec).toLocaleString()}</div><div class="cal-cnt">${recTotal(rec)}個</div>`:''}
     </div>`;
   }
   document.getElementById('cal-body').innerHTML=cells;
@@ -637,10 +1605,10 @@ function renderCalendar(){
 function calClick(dateStr){
   const rec=records.find(r=>r.date===dateStr);
   const el=document.getElementById('cal-detail');
-  if(!rec){el.innerHTML=`<div class="card"><p style="font-size:13px;color:var(--text2);margin:0 0 8px;">${dateStr} — 記録なし</p><button class="btn-sm" onclick="jumpToInput('${dateStr}')">この日の記録を入力</button></div>`;return;}
-  const tags=cats.map(cat=>{const n=(rec.counts||{})[cat.id]||0;return n>0?`<span class="tag ${tagCls(cat.id)}">${cat.name} ${n}個</span>`:''}).join('');
+  if(!rec){el.innerHTML=`<div class="card"><p style="font-size:12px;color:var(--muted);margin:0 0 12px;letter-spacing:0.04em;">${dateStr} — 記録なし</p><button class="btn-sm" onclick="jumpToInput('${dateStr}')">この日の記録を入力</button></div>`;return;}
+  const tags=cats.map(cat=>{const n=(rec.counts||{})[cat.id]||0;return n>0?`<span class="tag ${tagCls(cat.id)}"><span class="tag-dot"></span>${cat.name} ${n}個</span>`:''}).join('');
   const {start,end}=getPeriodForDate(dateStr);
-  el.innerHTML=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;"><span style="font-size:14px;font-weight:500;">${dateStr}</span><span style="font-size:15px;font-weight:500;color:var(--blue);">${recYen(rec).toLocaleString()}円</span></div><p style="font-size:11px;color:var(--text3);margin:0 0 8px;">締め期間: ${getPeriodLabel(start,end)}</p><div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:8px;">${tags}</div>${rec.memo?`<p style="font-size:13px;color:var(--text2);margin:0 0 8px;">${rec.memo}</p>`:''}<button class="btn-sm" onclick="jumpToInput('${dateStr}')">編集</button></div>`;
+  el.innerHTML=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;"><span class="serif" style="font-size:18px;font-weight:500;">${dateStr}</span><span class="serif num" style="font-size:22px;font-weight:500;color:var(--ink);">${recYen(rec).toLocaleString()}<span style="font-size:12px;color:var(--muted);margin-left:2px;font-family:var(--font-sans);">円</span></span></div><p class="eyebrow" style="margin:0 0 12px;">締め期間 ${getPeriodLabel(start,end)}</p><div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;">${tags}</div>${rec.memo?`<p style="font-size:13px;color:var(--muted);margin:0 0 12px;font-style:italic;line-height:1.6;">「${rec.memo}」</p>`:''}<button class="btn-sm" onclick="jumpToInput('${dateStr}')">編集</button></div>`;
 }
 function jumpToInput(dateStr){
   const rec=records.find(r=>r.date===dateStr);
@@ -652,7 +1620,6 @@ function jumpToInput(dateStr){
 
 /* ══ Settings ══ */
 function initSettingsScreen(){
-  // 締め日セレクトを初期化
   const sel=document.getElementById('closing-day-select');
   sel.innerHTML='<option value="0">月末（末日）</option>';
   for(let i=1;i<=31;i++){
@@ -661,7 +1628,6 @@ function initSettingsScreen(){
   sel.value=closingDay;
   renderCatList();
 }
-
 async function saveClosingDay(){
   const day=parseInt(document.getElementById('closing-day-select').value);
   const err=document.getElementById('closing-err');
@@ -681,14 +1647,13 @@ async function saveClosingDay(){
 
 function renderCatList(){
   document.getElementById('categories-list').innerHTML=cats.map((cat,i)=>`
-    <div style="display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:0.5px solid var(--border);flex-wrap:wrap;">
-      <span style="flex:1;font-size:14px;font-weight:500;min-width:60px;">${cat.name}${cat.fixed?'<span style="font-size:10px;color:var(--text3);font-weight:400;margin-left:4px;">固定</span>':''}</span>
-      <div style="display:flex;align-items:center;gap:6px;">
-        <input type="number" id="price-input-${i}" value="${cat.price}" min="1"
-          style="width:80px;padding:5px 8px;font-size:14px;text-align:right;" />
-        <span style="font-size:13px;color:var(--text2);">円</span>
-        <button class="btn-sm" style="padding:4px 10px;font-size:12px;" onclick="updatePrice(${i})">変更</button>
-        ${!cat.fixed?`<button class="btn-danger" style="padding:4px 8px;font-size:12px;" onclick="removeCategory(${i})">削除</button>`:''}
+    <div class="cat-row">
+      <span class="cat-name">${cat.name}${cat.fixed?'<span class="cat-fixed">固定</span>':''}</span>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <input type="number" id="price-input-${i}" value="${cat.price}" min="1" style="width:90px;padding:7px 10px;font-size:14px;text-align:right;" />
+        <span style="font-size:12px;color:var(--muted);">円</span>
+        <button class="btn-sm" style="padding:5px 12px;font-size:11px;" onclick="updatePrice(${i})">変更</button>
+        ${!cat.fixed?`<button class="btn-danger" style="padding:5px 10px;font-size:11px;" onclick="removeCategory(${i})">削除</button>`:''}
       </div>
     </div>`).join('');
 }
