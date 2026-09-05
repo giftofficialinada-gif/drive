@@ -1334,6 +1334,17 @@
     .goal-stats{grid-template-columns:1fr}
   }
 
+
+  /* Calendar rest-day settings */
+  .cal-day.off-day{background:var(--sumi-tint);border-style:dashed;border-color:var(--line-3)}
+  .cal-day.off-day .cal-num{color:var(--muted)}
+  .cal-day.off-day .cal-yen,.cal-day.off-day .cal-cnt{opacity:.45}
+  .cal-off-mark{font-size:8px;color:var(--muted);display:block;line-height:1;letter-spacing:.06em;font-weight:600;margin-top:2px}
+  .cal-legend{display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--muted-2);margin-top:10px}
+  .cal-legend-dot{width:10px;height:10px;border-radius:3px;display:inline-block;vertical-align:-1px;margin-right:4px;border:1px solid var(--line-2);background:var(--paper)}
+  .cal-legend-dot.off{background:var(--sumi-tint);border-style:dashed}
+  .offday-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+
 </style>
 </head>
 <body>
@@ -1454,7 +1465,7 @@
         <div class="cal-dow" style="color:var(--indigo);">SAT</div>
       </div>
       <div class="cal-grid" id="cal-body"></div>
-      <p style="font-size:10px;color:var(--muted-2);margin:10px 0 0;text-align:right;letter-spacing:0.1em;">紅枠 = 締め日</p>
+      <div class="cal-legend"><span><span class="cal-legend-dot" style="border-color:var(--beni);"></span>紅枠 = 締め日</span><span><span class="cal-legend-dot off"></span>休 = 非稼働日</span></div>
       <div id="cal-detail" style="margin-top:1.25rem;"></div>
     </div>
 
@@ -1627,7 +1638,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const DEFAULTS = [{id:'normal',name:'通常',price:155,fixed:true},{id:'cool',name:'クール',price:235,fixed:true},{id:'collect',name:'コレクト',price:232,fixed:true}];
 const CAT_COLORS = {normal:'var(--indigo)',cool:'var(--matcha)',collect:'var(--kincha)'};
-let CU=null, cats=[], records=[], closingDay=0;
+let CU=null, cats=[], records=[], closingDay=0, offDays=[];
 const pins={};
 let calYear, calMonth;
 let analysisView='monthly', analysisMetric='yen';
@@ -1683,6 +1694,16 @@ async function dbCreateUser(u,h){return sb('users','POST',{username:u,pin_hash:h
 async function dbUpdatePin(u,h){return sb(`users?username=eq.${enc(u)}`,'PATCH',{pin_hash:h});}
 async function dbDeleteUser(u){return sb(`users?username=eq.${enc(u)}`,'DELETE');}
 async function dbGetRecords(u){return sb(`delivery_records?username=eq.${enc(u)}&order=date.desc&select=*`);}
+function offDayKey(u){return 'offdays_'+u;}
+function loadOffDays(u){try{const raw=localStorage.getItem(offDayKey(u));const arr=raw?JSON.parse(raw):[];return Array.isArray(arr)?arr:[];}catch(e){return [];}}
+function saveOffDaysLocal(u,days){localStorage.setItem(offDayKey(u),JSON.stringify([...new Set(days)].sort()));}
+function isOffDay(date){return offDays.includes(date);}
+function setOffDay(date,on){
+  if(on){if(!offDays.includes(date))offDays.push(date);}else{offDays=offDays.filter(d=>d!==date);}
+  offDays.sort();
+  if(CU)saveOffDaysLocal(CU,offDays);
+}
+
 async function dbInsertRecord(u,date,counts,memo,saved){return sb('delivery_records','POST',{username:u,date,counts,memo,saved});}
 async function dbUpdateRecord(u,date,counts,memo,saved){return sb(`delivery_records?username=eq.${enc(u)}&date=eq.${date}`,'PATCH',{counts,memo,saved});}
 async function dbDeleteRecord(u,date){return sb(`delivery_records?username=eq.${enc(u)}&date=eq.${date}`,'DELETE');}
@@ -1803,7 +1824,7 @@ async function doRegister(){
   }catch(e){err.textContent='通信エラー: '+e.message;pins.reg='';updDots('reg');}
   hideLoading();
 }
-function doLogout(){CU=null;cats=[];records=[];closingDay=0;pins.login='';updDots('login');document.getElementById('login-name').value='';document.getElementById('login-err').textContent='';ss('login');}
+function doLogout(){CU=null;cats=[];records=[];closingDay=0;offDays=[];pins.login='';updDots('login');document.getElementById('login-name').value='';document.getElementById('login-err').textContent='';ss('login');}
 
 /* ══ Init ══ */
 async function initMain(){
@@ -1817,6 +1838,7 @@ async function initMain(){
     cats=(await dbGetCats(CU))||DEFAULTS;
     records=await dbGetRecords(CU);
     closingDay=await dbGetClosingDay(CU);
+    offDays=loadOffDays(CU);
   }catch(e){cats=DEFAULTS;records=[];closingDay=0;}
   hideLoading();
   initAnalyticsControls();
@@ -1979,6 +2001,31 @@ function exportCSV(){
   const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=CU+'_配送記録.csv';a.click();URL.revokeObjectURL(url);
 }
 
+
+function toggleOffDay(date){
+  const rec=records.find(r=>r.date===date);
+  const next=!isOffDay(date);
+  if(next&&rec&&recTotal(rec)>0){if(!confirm('この日は配送記録があります。休みの日として設定しますか？\\n記録自体は削除されません。'))return;}
+  setOffDay(date,next);
+  renderCalendar();renderAnalytics();renderPeriodBanner();
+  showToast(next?'休みの日に設定しました':'稼働日に戻しました');
+}
+function workingDaysInMonth(ym){
+  const dim=daysInMonth(ym);let count=0;
+  for(let d=1;d<=dim;d++){const ds=`${ym}-${String(d).padStart(2,'0')}`;if(!isOffDay(ds))count++;}
+  return count;
+}
+function elapsedWorkingDaysInMonth(ym){
+  const elapsed=elapsedDaysInSelectedMonth(ym);let count=0;
+  for(let d=1;d<=elapsed;d++){const ds=`${ym}-${String(d).padStart(2,'0')}`;if(!isOffDay(ds))count++;}
+  return count;
+}
+function remainingWorkingDaysInMonth(ym){
+  const elapsed=elapsedDaysInSelectedMonth(ym),dim=daysInMonth(ym);let count=0;
+  for(let d=elapsed+1;d<=dim;d++){const ds=`${ym}-${String(d).padStart(2,'0')}`;if(!isOffDay(ds))count++;}
+  return count;
+}
+
 /* ══ Calendar ══ */
 function calMove(d){calMonth+=d;if(calMonth>11){calMonth=0;calYear++;}if(calMonth<0){calMonth=11;calYear--;}renderCalendar();}
 function renderCalendar(){
@@ -2002,8 +2049,8 @@ function renderCalendar(){
     const rec=recMap[dateStr];const isToday=dateStr===today;const hasData=!!rec&&!isOther;
     const isClosing=dateStr===closingDateStr&&!isOther;
     const dow=i%7;const nc=dow===0?'color:var(--beni)':dow===6?'color:var(--indigo)':'';
-    cells+=`<div class="cal-day${isOther?' other-month':''}${isToday?' today':''}${hasData?' has-data':''}${isClosing?' closing-day':''}" onclick="calClick('${dateStr}')">
-      <div class="cal-num" style="${nc}">${day}${isClosing?'<span class="cal-closing-mark">締</span>':''}</div>
+    cells+=`<div class="cal-day${isOther?' other-month':''}${isToday?' today':''}${hasData?' has-data':''}${isClosing?' closing-day':''}${isOffDay(dateStr)?' off-day':''}" onclick="calClick('${dateStr}')">
+      <div class="cal-num" style="${nc}">${day}${isClosing?'<span class="cal-closing-mark">締</span>':''}${isOffDay(dateStr)?'<span class="cal-off-mark">休</span>':''}</div>
       ${hasData?`<div class="cal-yen num">${recYen(rec).toLocaleString()}</div><div class="cal-cnt">${recTotal(rec)}個</div>`:''}
     </div>`;
   }
@@ -2013,10 +2060,14 @@ function renderCalendar(){
 function calClick(dateStr){
   const rec=records.find(r=>r.date===dateStr);
   const el=document.getElementById('cal-detail');
-  if(!rec){el.innerHTML=`<div class="card"><p style="font-size:12px;color:var(--muted);margin:0 0 12px;letter-spacing:0.04em;">${dateStr} — 記録なし</p><button class="btn-sm" onclick="jumpToInput('${dateStr}')">この日の記録を入力</button></div>`;return;}
+  const offBtn=`<button class="btn-sm" onclick="toggleOffDay('${dateStr}')">${isOffDay(dateStr)?'稼働日に戻す':'この日を休みにする'}</button>`;
+  if(!rec){
+    el.innerHTML=`<div class="card"><p style="font-size:12px;color:var(--muted);margin:0 0 12px;letter-spacing:0.04em;">${dateStr} — ${isOffDay(dateStr)?'休み':'記録なし'}</p><div class="offday-actions"><button class="btn-sm" onclick="jumpToInput('${dateStr}')">この日の記録を入力</button>${offBtn}</div></div>`;
+    return;
+  }
   const tags=cats.map(cat=>{const n=(rec.counts||{})[cat.id]||0;return n>0?`<span class="tag ${tagCls(cat.id)}"><span class="tag-dot"></span>${cat.name} ${n}個</span>`:''}).join('');
   const {start,end}=getPeriodForDate(dateStr);
-  el.innerHTML=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;"><span class="serif" style="font-size:18px;font-weight:500;">${dateStr}</span><span class="serif num" style="font-size:22px;font-weight:500;color:var(--ink);">${recYen(rec).toLocaleString()}<span style="font-size:12px;color:var(--muted);margin-left:2px;font-family:var(--font-sans);">円</span></span></div><p class="eyebrow" style="margin:0 0 12px;">締め期間 ${getPeriodLabel(start,end)}</p><div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;">${tags}</div>${rec.memo?`<p style="font-size:13px;color:var(--muted);margin:0 0 12px;font-style:italic;line-height:1.6;">「${rec.memo}」</p>`:''}<button class="btn-sm" onclick="jumpToInput('${dateStr}')">編集</button></div>`;
+  el.innerHTML=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;"><span class="serif" style="font-size:18px;font-weight:500;">${dateStr}${isOffDay(dateStr)?' <span style="font-size:11px;color:var(--muted);font-family:var(--font-sans);">休み設定</span>':''}</span><span class="serif num" style="font-size:22px;font-weight:500;color:var(--ink);">${recYen(rec).toLocaleString()}<span style="font-size:12px;color:var(--muted);margin-left:2px;font-family:var(--font-sans);">円</span></span></div><p class="eyebrow" style="margin:0 0 12px;">締め期間 ${getPeriodLabel(start,end)}</p><div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;">${tags}</div>${rec.memo?`<p style="font-size:13px;color:var(--muted);margin:0 0 12px;font-style:italic;line-height:1.6;">「${rec.memo}」</p>`:''}<div class="offday-actions"><button class="btn-sm" onclick="jumpToInput('${dateStr}')">編集</button>${offBtn}</div></div>`;
 }
 function jumpToInput(dateStr){
   const rec=records.find(r=>r.date===dateStr);
@@ -2162,32 +2213,19 @@ function projectionForMonth(ym){
   const cur=monthRecordStats(ym);
   const prevYm=monthShift(ym,-1);
   const prev=monthRecordStats(prevYm);
-  const dim=daysInMonth(ym);
-  const elapsed=elapsedDaysInSelectedMonth(ym);
-  const remaining=Math.max(dim-elapsed,0);
-
-  // Current pace based on elapsed calendar days and current recorded total.
-  const calendarDailyAvg=elapsed>0?cur.total/elapsed:0;
-  const paceProjection=cur.total + calendarDailyAvg*remaining;
-
-  // Previous-month pattern projection:
-  // Use previous month's average per calendar day as a second reference.
-  const prevDim=daysInMonth(prevYm);
-  const prevCalendarDailyAvg=prevDim>0?prev.total/prevDim:0;
-  const prevPatternProjection=cur.total + prevCalendarDailyAvg*remaining;
-
-  // Blended estimate weights current pace more heavily once the month progresses.
-  let progress=dim>0?elapsed/dim:0;
-  let weightCurrent=Math.min(.8, Math.max(.35, progress));
-  if(elapsed===0) weightCurrent=0;
-  const blended = elapsed===0 ? prev.total :
-    (paceProjection*weightCurrent + prevPatternProjection*(1-weightCurrent));
-
-  return {
-    cur, prevYm, prev, dim, elapsed, remaining,
-    calendarDailyAvg, paceProjection, prevCalendarDailyAvg,
-    prevPatternProjection, blended, weightCurrent
-  };
+  const totalWork=workingDaysInMonth(ym);
+  const elapsedWork=elapsedWorkingDaysInMonth(ym);
+  const remainingWork=remainingWorkingDaysInMonth(ym);
+  const currentWorkDailyAvg=elapsedWork>0?cur.total/elapsedWork:0;
+  const paceProjection=cur.total+currentWorkDailyAvg*remainingWork;
+  const prevWorkDays=workingDaysInMonth(prevYm);
+  const prevWorkDailyAvg=prevWorkDays>0?prev.total/prevWorkDays:0;
+  const prevPatternProjection=cur.total+prevWorkDailyAvg*remainingWork;
+  let progress=totalWork>0?elapsedWork/totalWork:0;
+  let weightCurrent=Math.min(.8,Math.max(.35,progress));
+  if(elapsedWork===0)weightCurrent=0;
+  const blended=elapsedWork===0?prev.total:paceProjection*weightCurrent+prevPatternProjection*(1-weightCurrent);
+  return {cur,prevYm,prev,totalWork,elapsedWork,remainingWork,currentWorkDailyAvg,paceProjection,prevWorkDailyAvg,prevPatternProjection,blended,weightCurrent};
 }
 
 function previousMonthWithData(ym, maxLookback=12){
@@ -2229,119 +2267,42 @@ function renderAutoGoal(selectedYm){
   const root=document.getElementById('analytics-goal');
   const card=document.getElementById('analytics-goal-card');
   if(!root||!card)return;
-
   const goal=autoGoalForMonth(selectedYm);
-  if(!goal){
-    card.style.display='none';
-    return;
-  }
+  if(!goal){card.style.display='none';return;}
   card.style.display='block';
-
   const cur=monthRecordStats(selectedYm);
   const pct=goal.target>0?(cur.total/goal.target)*100:0;
   const pctClamped=Math.max(0,Math.min(100,pct));
   const remaining=Math.max(goal.target-cur.total,0);
-  const elapsed=elapsedDaysInSelectedMonth(selectedYm);
-  const dim=daysInMonth(selectedYm);
-  const leftDays=Math.max(dim-elapsed,0);
-  const requiredPerDay=leftDays>0?remaining/leftDays:remaining;
-
-  const basisText=goal.monthsBack===1
-    ? `${monthLabel(goal.baseYm)} 実績 ${formatMetric(goal.baseTotal)} を基準に +${goal.growthRate}%`
-    : `${monthLabel(goal.baseYm)} の直近実績 ${formatMetric(goal.baseTotal)} を基準に +${goal.growthRate}%`;
-
+  const totalWorkingDays=workingDaysInMonth(selectedYm);
+  const elapsedWorkingDays=elapsedWorkingDaysInMonth(selectedYm);
+  const leftWorkingDays=remainingWorkingDaysInMonth(selectedYm);
+  const requiredPerWorkday=leftWorkingDays>0?remaining/leftWorkingDays:remaining;
+  const offCount=daysInMonth(selectedYm)-totalWorkingDays;
+  const basisText=goal.monthsBack===1?`${monthLabel(goal.baseYm)} 実績 ${formatMetric(goal.baseTotal)} を基準に +${goal.growthRate}%`:`${monthLabel(goal.baseYm)} の直近実績 ${formatMetric(goal.baseTotal)} を基準に +${goal.growthRate}%`;
   root.innerHTML=`
-    <div class="goal-top">
-      <div>
-        <p class="eyebrow" style="margin-bottom:6px;">AUTO GOAL</p>
-        <p class="goal-title">${monthLabel(selectedYm)} 自動目標</p>
-        <p class="goal-meta">${basisText}</p>
-      </div>
-      <div style="text-align:right;">
-        <p class="goal-value">${formatMetric(goal.target)}</p>
-        <p class="goal-meta">自動設定</p>
-      </div>
-    </div>
-
-    <div class="goal-progress-wrap">
-      <div class="goal-progress-head">
-        <span>達成率 ${pct.toFixed(1)}%</span>
-        <span>${formatMetric(cur.total)} / ${formatMetric(goal.target)}</span>
-      </div>
-      <div class="goal-track"><div class="goal-fill" style="width:${pctClamped}%"></div></div>
-    </div>
-
-    <div class="goal-stats">
-      <div class="goal-stat">
-        <p class="goal-stat-label">あと</p>
-        <p class="goal-stat-value">${formatMetric(remaining)}</p>
-      </div>
-      <div class="goal-stat">
-        <p class="goal-stat-label">残り日数</p>
-        <p class="goal-stat-value">${leftDays.toLocaleString()}日</p>
-      </div>
-      <div class="goal-stat">
-        <p class="goal-stat-label">必要ペース / 日</p>
-        <p class="goal-stat-value">${leftDays>0?formatMetric(requiredPerDay):'—'}</p>
-      </div>
-    </div>`;
+    <div class="goal-top"><div><p class="eyebrow" style="margin-bottom:6px;">AUTO GOAL</p><p class="goal-title">${monthLabel(selectedYm)} 自動目標</p><p class="goal-meta">${basisText}</p></div><div style="text-align:right;"><p class="goal-value">${formatMetric(goal.target)}</p><p class="goal-meta">自動設定</p></div></div>
+    <div class="goal-progress-wrap"><div class="goal-progress-head"><span>達成率 ${pct.toFixed(1)}%</span><span>${formatMetric(cur.total)} / ${formatMetric(goal.target)}</span></div><div class="goal-track"><div class="goal-fill" style="width:${pctClamped}%"></div></div></div>
+    <div class="goal-stats"><div class="goal-stat"><p class="goal-stat-label">あと</p><p class="goal-stat-value">${formatMetric(remaining)}</p></div><div class="goal-stat"><p class="goal-stat-label">残り稼働予定日</p><p class="goal-stat-value">${leftWorkingDays.toLocaleString()}日</p></div><div class="goal-stat"><p class="goal-stat-label">必要ペース / 稼働日</p><p class="goal-stat-value">${leftWorkingDays>0?formatMetric(requiredPerWorkday):'—'}</p></div></div>
+    <p class="goal-meta" style="margin-top:10px;">今月の稼働予定 ${totalWorkingDays}日・休み ${offCount}日（ここまでの稼働予定 ${elapsedWorkingDays}日）</p>`;
 }
 
 function renderProjection(selectedYm){
   const box=document.getElementById('analytics-projection');
   const note=document.getElementById('analytics-projection-note');
   if(!box||!note)return;
-
   const p=projectionForMonth(selectedYm);
-  const unit=analysisMetric==='yen'?'円':'個';
   const todayYm=todayStr().slice(0,7);
   const isCurrent=selectedYm===todayYm;
   const avgActive=p.cur.avgPerActiveDay;
-  const avgCalendar=p.elapsed>0?p.cur.total/p.elapsed:0;
-
+  const scheduledAvg=p.elapsedWork>0?p.cur.total/p.elapsedWork:0;
   if(!isCurrent){
-    box.innerHTML=`
-      <div class="projection-card">
-        <p class="projection-label">1日平均（稼働日）</p>
-        <p class="projection-value">${formatMetric(avgActive)}</p>
-        <p class="projection-sub">${p.cur.activeDays}日稼働ベース</p>
-      </div>
-      <div class="projection-card">
-        <p class="projection-label">1日平均（暦日）</p>
-        <p class="projection-value">${formatMetric(p.dim?p.cur.total/p.dim:0)}</p>
-        <p class="projection-sub">${p.dim}日で割った平均</p>
-      </div>
-      <div class="projection-card">
-        <p class="projection-label">月合計</p>
-        <p class="projection-value">${formatMetric(p.cur.total)}</p>
-        <p class="projection-sub">確定済み実績</p>
-      </div>`;
-    note.textContent='過去月は確定済みのため、月末予測ではなく実績平均を表示しています。';
-    return;
+    box.innerHTML=`<div class="projection-card"><p class="projection-label">1日平均（実稼働日）</p><p class="projection-value">${formatMetric(avgActive)}</p><p class="projection-sub">${p.cur.activeDays}日記録ベース</p></div><div class="projection-card"><p class="projection-label">1日平均（稼働予定日）</p><p class="projection-value">${formatMetric(p.totalWork?p.cur.total/p.totalWork:0)}</p><p class="projection-sub">休みを除く ${p.totalWork}日で計算</p></div><div class="projection-card"><p class="projection-label">月合計</p><p class="projection-value">${formatMetric(p.cur.total)}</p><p class="projection-sub">確定済み実績</p></div>`;
+    note.textContent='過去月は確定済みのため、休みの日を除いた稼働予定日ベースの平均を表示しています。';return;
   }
-
-  box.innerHTML=`
-    <div class="projection-card">
-      <p class="projection-label">1日平均（稼働日）</p>
-      <p class="projection-value">${formatMetric(avgActive)}</p>
-      <p class="projection-sub">${p.cur.activeDays}日稼働ベース</p>
-    </div>
-    <div class="projection-card">
-      <p class="projection-label">1日平均（ここまで）</p>
-      <p class="projection-value">${formatMetric(avgCalendar)}</p>
-      <p class="projection-sub">${p.elapsed}日経過ベース</p>
-    </div>
-    <div class="projection-card emphasis">
-      <p class="projection-label">月末予測</p>
-      <p class="projection-value">${formatMetric(p.blended)}</p>
-      <p class="projection-sub">今月ペース＋前月ペースから推定</p>
-    </div>`;
-
-  const curWeight=Math.round(p.weightCurrent*100);
-  const prevWeight=100-curWeight;
-  note.textContent=
-    `予測は、今月ここまでのペースを${curWeight}%、前月の1日平均ペースを${prevWeight}%程度で加味した参考値です。`+
-    ` 残り${p.remaining}日。実際の稼働日数や荷量によって変動します。`;
+  box.innerHTML=`<div class="projection-card"><p class="projection-label">1日平均（実稼働日）</p><p class="projection-value">${formatMetric(avgActive)}</p><p class="projection-sub">${p.cur.activeDays}日記録ベース</p></div><div class="projection-card"><p class="projection-label">1日平均（稼働予定日）</p><p class="projection-value">${formatMetric(scheduledAvg)}</p><p class="projection-sub">休みを除くここまで ${p.elapsedWork}日</p></div><div class="projection-card emphasis"><p class="projection-label">月末予測</p><p class="projection-value">${formatMetric(p.blended)}</p><p class="projection-sub">今月ペース＋前月ペースから推定</p></div>`;
+  const curWeight=Math.round(p.weightCurrent*100),prevWeight=100-curWeight;
+  note.textContent=`予測は今月の稼働予定ペースを${curWeight}%、前月の稼働日平均ペースを${prevWeight}%程度で加味した参考値です。 残り稼働予定 ${p.remainingWork}日。カレンダーで休みを変更すると自動で再計算されます。`;
 }
 
 function renderAnalytics(){
@@ -2577,6 +2538,7 @@ async function deleteAccount(){
     await sb(`delivery_records?username=eq.${enc(CU)}`,'DELETE');
     await sb(`categories?username=eq.${enc(CU)}`,'DELETE');
     localStorage.removeItem('closing_'+CU);
+    localStorage.removeItem(offDayKey(CU));
     CU=null;ss('login');
   }catch(e){showToast('削除エラー: '+e.message);}
   hideLoading();
