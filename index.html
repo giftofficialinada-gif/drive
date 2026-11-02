@@ -992,359 +992,8 @@
     .summary-banner { padding: 16px; }
     .brand-title { font-size: 24px; }
   }
-
-  /* Analytics / Graphs */
-  .analytics-controls {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 1rem;
-  }
-  .analytics-control {
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    padding: 14px;
-  }
-  .segmented {
-    display: flex;
-    gap: 4px;
-    padding: 3px;
-    background: var(--bg-soft);
-    border-radius: var(--r);
-  }
-  .seg-btn {
-    flex: 1;
-    border: 0;
-    background: transparent;
-    color: var(--muted);
-    font: inherit;
-    font-size: 12px;
-    padding: 8px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background .12s, color .12s, box-shadow .12s;
-  }
-  .seg-btn.active {
-    background: var(--paper);
-    color: var(--ink);
-    box-shadow: var(--shadow-card);
-  }
-  .analytics-filter-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    margin-bottom: 1rem;
-  }
-  .compare-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-    margin-bottom: 1rem;
-  }
-  .compare-card {
-    background: var(--paper-2);
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    padding: 14px 16px;
-  }
-  .compare-card .cc-label {
-    font-size: 10px;
-    letter-spacing: .14em;
-    color: var(--muted);
-    margin-bottom: 6px;
-  }
-  .compare-card .cc-value {
-    font-family: var(--font-serif);
-    font-size: 24px;
-    font-weight: 500;
-    line-height: 1.15;
-    font-variant-numeric: tabular-nums;
-  }
-  .compare-card .cc-sub {
-    margin-top: 6px;
-    font-size: 11px;
-    color: var(--muted);
-  }
-  .compare-card.diff.positive .cc-value { color: var(--matcha); }
-  .compare-card.diff.negative .cc-value { color: var(--beni); }
-
-  .chart-card {
-    background: var(--paper);
-    border: 1px solid var(--line);
-    border-radius: var(--r-lg);
-    padding: 1rem;
-    margin-bottom: 1rem;
-    overflow: hidden;
-  }
-  .chart-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 12px;
-    margin-bottom: 12px;
-    flex-wrap: wrap;
-  }
-  .chart-title {
-    font-family: var(--font-serif);
-    font-size: 16px;
-    font-weight: 500;
-  }
-  .chart-note {
-    font-size: 10px;
-    color: var(--muted);
-    letter-spacing: .04em;
-  }
-  .chart-scroll {
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px;
-  }
-  .analytics-svg {
-    display: block;
-    min-width: 100%;
-    height: auto;
-  }
-  .chart-empty {
-    text-align: center;
-    padding: 3rem 1rem;
-    font-size: 13px;
-    color: var(--muted-2);
-  }
-  .legend-row {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-    margin-top: 10px;
-    font-size: 10px;
-    color: var(--muted);
-  }
-  .legend-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 2px;
-    display: inline-block;
-    margin-right: 5px;
-    vertical-align: 0;
-    background: var(--indigo);
-  }
-  .legend-dot.prev { background: var(--muted-2); }
-
-  @media (max-width: 540px) {
-    .analytics-controls,
-    .analytics-filter-row { grid-template-columns: 1fr; }
-    .compare-grid { grid-template-columns: 1fr; }
-  }
-
-
-  /* Analytics clarity improvements */
-  .analytics-kpi{display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .trend-pill{display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:999px;font-size:10px;font-weight:600;background:var(--sumi-tint);color:var(--muted);white-space:nowrap}
-  .trend-pill.up{background:var(--matcha-tint);color:var(--matcha)}
-  .trend-pill.down{background:var(--beni-tint);color:var(--beni)}
-  .chart-summary-line{display:flex;gap:20px;flex-wrap:wrap;align-items:baseline;margin:4px 0 12px;padding:10px 12px;border-radius:var(--r);background:var(--paper-2);border:1px solid var(--line)}
-  .chart-summary-line .big{font-family:var(--font-serif);font-size:20px;font-weight:500;color:var(--ink)}
-  .chart-summary-line .small{font-size:10px;color:var(--muted);letter-spacing:.05em}
-  .analysis-help{font-size:11px;line-height:1.7;color:var(--muted);background:var(--paper-2);border:1px solid var(--line);border-radius:var(--r);padding:10px 12px;margin-bottom:1rem}
-  .graph-tip{font-size:10px;color:var(--muted-2);margin-top:8px;text-align:right}
-  .analytics-svg text{font-family:var(--font-sans)}
-
-
-  .projection-grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:12px;
-    margin-bottom:1rem;
-  }
-  .projection-card{
-    background:var(--paper);
-    border:1px solid var(--line);
-    border-radius:var(--r-lg);
-    padding:14px 16px;
-  }
-  .projection-card.emphasis{
-    background:linear-gradient(135deg,var(--paper) 0%,var(--indigo-tint) 100%);
-    border-color:rgba(36,62,102,.18);
-  }
-  .projection-label{
-    font-size:10px;
-    letter-spacing:.14em;
-    color:var(--muted);
-    margin-bottom:6px;
-  }
-  .projection-value{
-    font-family:var(--font-serif);
-    font-size:24px;
-    line-height:1.15;
-    font-weight:500;
-    color:var(--ink);
-  }
-  .projection-sub{
-    margin-top:6px;
-    font-size:11px;
-    color:var(--muted);
-    line-height:1.55;
-  }
-  .projection-note{
-    font-size:10px;
-    color:var(--muted-2);
-    margin-top:8px;
-    line-height:1.6;
-  }
-  @media (max-width:540px){
-    .projection-grid{grid-template-columns:1fr}
-  }
-
-
-  /* Month picker: match the app's paper UI */
-  input[type=month]{
-    width:100%;
-    padding:11px 14px;
-    font-size:15px;
-    border:1px solid var(--line-2);
-    border-radius:var(--r);
-    background:var(--paper);
-    color:var(--ink);
-    font-family:inherit;
-    outline:none;
-    transition:border-color .15s, box-shadow .15s, background .15s;
-    font-variant-numeric:tabular-nums;
-    color-scheme:light;
-  }
-  input[type=month]:focus{
-    border-color:var(--indigo);
-    box-shadow:0 0 0 3px var(--indigo-tint);
-    background:var(--paper);
-  }
-  input[type=month]::-webkit-calendar-picker-indicator{
-    opacity:.62;
-    cursor:pointer;
-  }
-  [data-theme="dark"] input[type=month]{
-    color-scheme:dark;
-    background:var(--paper);
-    color:var(--ink);
-  }
-  [data-theme="dark"] input[type=month]::-webkit-calendar-picker-indicator{
-    opacity:.72;
-  }
-
-  /* Auto target */
-  .goal-card{
-    background:linear-gradient(135deg,var(--paper) 0%,var(--paper-2) 100%);
-    border:1px solid var(--line);
-    border-radius:var(--r-xl);
-    padding:18px 20px;
-    margin-bottom:1rem;
-    position:relative;
-    overflow:hidden;
-  }
-  .goal-card::before{
-    content:"";
-    position:absolute;
-    right:-34px;
-    top:-34px;
-    width:130px;
-    height:130px;
-    border-radius:50%;
-    background:var(--indigo-tint);
-    opacity:.8;
-    pointer-events:none;
-  }
-  .goal-top{
-    display:flex;
-    align-items:flex-start;
-    justify-content:space-between;
-    gap:14px;
-    flex-wrap:wrap;
-    position:relative;
-  }
-  .goal-title{
-    font-family:var(--font-serif);
-    font-size:16px;
-    font-weight:500;
-    margin-bottom:4px;
-  }
-  .goal-value{
-    font-family:var(--font-serif);
-    font-size:30px;
-    font-weight:500;
-    line-height:1;
-    color:var(--indigo-deep);
-    font-variant-numeric:tabular-nums;
-  }
-  .goal-meta{
-    font-size:10px;
-    color:var(--muted);
-    line-height:1.65;
-    margin-top:7px;
-  }
-  .goal-progress-wrap{
-    margin-top:16px;
-    position:relative;
-  }
-  .goal-progress-head{
-    display:flex;
-    justify-content:space-between;
-    gap:10px;
-    font-size:10px;
-    color:var(--muted);
-    margin-bottom:7px;
-  }
-  .goal-track{
-    height:10px;
-    border-radius:999px;
-    background:var(--bg-soft);
-    overflow:hidden;
-    border:1px solid var(--line);
-  }
-  .goal-fill{
-    height:100%;
-    border-radius:999px;
-    background:var(--indigo);
-    width:0%;
-    transition:width .3s ease;
-  }
-  .goal-stats{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:10px;
-    margin-top:12px;
-  }
-  .goal-stat{
-    background:var(--paper);
-    border:1px solid var(--line);
-    border-radius:var(--r);
-    padding:10px 12px;
-  }
-  .goal-stat-label{
-    font-size:9px;
-    letter-spacing:.12em;
-    color:var(--muted);
-    margin-bottom:4px;
-  }
-  .goal-stat-value{
-    font-family:var(--font-serif);
-    font-size:17px;
-    font-weight:500;
-    color:var(--ink);
-  }
-  @media(max-width:540px){
-    .goal-stats{grid-template-columns:1fr}
-  }
-
-
-  /* Calendar rest-day settings */
-  .cal-day.off-day{background:var(--sumi-tint);border-style:dashed;border-color:var(--line-3)}
-  .cal-day.off-day .cal-num{color:var(--muted)}
-  .cal-day.off-day .cal-yen,.cal-day.off-day .cal-cnt{opacity:.45}
-  .cal-off-mark{font-size:8px;color:var(--muted);display:block;line-height:1;letter-spacing:.06em;font-weight:600;margin-top:2px}
-  .cal-legend{display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;font-size:10px;color:var(--muted-2);margin-top:10px}
-  .cal-legend-dot{width:10px;height:10px;border-radius:3px;display:inline-block;vertical-align:-1px;margin-right:4px;border:1px solid var(--line-2);background:var(--paper)}
-  .cal-legend-dot.off{background:var(--sumi-tint);border-style:dashed}
-  .offday-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-
+.pace-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.pace-controls input{display:block;width:100%;margin-top:8px;background:var(--paper-2);color:var(--ink);border:1px solid var(--line-2);padding:12px;border-radius:var(--r);color-scheme:light} [data-theme="dark"] .pace-controls input{color-scheme:dark}.pace-table{width:100%;border-collapse:collapse;font-size:12px}.pace-table td,.pace-table th{padding:10px 6px;border-bottom:1px solid var(--line);text-align:left}.pace-table th{color:var(--muted);font-weight:500}.pace-progress{height:8px;background:var(--bg-soft);border-radius:9px;overflow:hidden;margin:12px 0}.pace-progress div{height:100%;background:var(--indigo)}@media(max-width:480px){.pace-controls{grid-template-columns:1fr}}
+.tab-bar{overflow-x:auto}.tab-btn{white-space:nowrap}.advice-note{font-size:12px;color:var(--muted);line-height:1.9}.advice-comment{background:var(--paper-2);border-left:3px solid var(--indigo);padding:16px;margin:14px 0;border-radius:var(--r);line-height:1.9;font-size:13px}.advice-comment h3{font-size:15px;margin-bottom:7px}.advice-lift{font-size:22px;color:var(--indigo);font-weight:600;margin:8px 0}.advice-extra{width:80px;background:var(--paper);color:var(--ink);border:1px solid var(--line-2);border-radius:var(--r);padding:8px}#advice-month{color-scheme:light}[data-theme="dark"] #advice-month{color-scheme:dark}
 </style>
 </head>
 <body>
@@ -1426,7 +1075,7 @@
     <div class="tab-bar">
       <button class="tab-btn active" id="tab-input" onclick="switchTab('input')">記録入力</button>
       <button class="tab-btn" id="tab-calendar" onclick="switchTab('calendar')">カレンダー</button>
-      <button class="tab-btn" id="tab-analysis" onclick="switchTab('analysis')">分析</button>
+      <button class="tab-btn" id="tab-advice" onclick="switchTab('advice')">売上アドバイス</button>
       <button class="tab-btn" id="tab-list" onclick="switchTab('list')">記録一覧</button>
     </div>
 
@@ -1450,8 +1099,19 @@
         <button class="btn-primary" onclick="saveRecord()">この日の記録を保存</button>
         <button class="btn-sm" onclick="clearForm()">クリア</button>
       </div>
-    </div>
 
+    <section class="card" id="pace-panel" style="margin-top:20px;">
+      <p class="eyebrow">DELIVERY PACE</p><h2 class="serif" style="margin:8px 0 16px;font-size:22px;">配送ペース・時刻履歴</h2>
+      <p style="font-size:12px;color:var(--muted);line-height:1.8;margin-bottom:16px;">入力個数は、その日ここまでに配達した累計個数です。保存が成功した時点の時刻と個数が残ります。</p>
+      <div class="pace-controls">
+        <label>配達開始時刻<input id="pace-start" type="time" onchange="savePacePlan()"></label>
+        <label>本日の配達予定個数<input id="pace-target" type="number" min="0" step="1" placeholder="例：180" onchange="savePacePlan()"></label>
+      </div>
+      <div id="pace-metrics" style="margin-top:18px;"></div>
+      <div id="pace-history" style="margin-top:18px;"></div>
+      <p style="font-size:11px;color:var(--muted);line-height:1.8;margin-top:14px;">予想は移動・休憩を含む記録間のペースから計算します。休憩や荷物の追加で変わります。履歴と予定はこのブラウザ内だけに保存されます。</p>
+    </section>
+    </div>
     <!-- カレンダー -->
     <div id="pane-calendar" class="hidden">
       <div class="cal-header">
@@ -1465,68 +1125,16 @@
         <div class="cal-dow" style="color:var(--indigo);">SAT</div>
       </div>
       <div class="cal-grid" id="cal-body"></div>
-      <div class="cal-legend"><span><span class="cal-legend-dot" style="border-color:var(--beni);"></span>紅枠 = 締め日</span><span><span class="cal-legend-dot off"></span>休 = 非稼働日</span></div>
+      <p style="font-size:10px;color:var(--muted-2);margin:10px 0 0;text-align:right;letter-spacing:0.1em;">紅枠 = 締め日</p>
       <div id="cal-detail" style="margin-top:1.25rem;"></div>
     </div>
 
-    <!-- 分析 -->
-    <div id="pane-analysis" class="hidden">
-      <div class="analytics-controls">
-        <div class="analytics-control">
-          <label>グラフ表示</label>
-          <div class="segmented">
-            <button class="seg-btn active" id="ana-view-monthly" onclick="setAnalysisView('monthly')">月別</button>
-            <button class="seg-btn" id="ana-view-daily" onclick="setAnalysisView('daily')">日付別</button>
-          </div>
-        </div>
-        <div class="analytics-control">
-          <label>指標</label>
-          <div class="segmented">
-            <button class="seg-btn active" id="ana-metric-yen" onclick="setAnalysisMetric('yen')">金額</button>
-            <button class="seg-btn" id="ana-metric-count" onclick="setAnalysisMetric('count')">個数</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="analytics-filter-row">
-        <div>
-          <label>対象月（日付別グラフ）</label>
-          <input type="month" id="analysis-month" onchange="renderAnalytics()" />
-        </div>
-        <div>
-          <label>荷物種別</label>
-          <select id="analysis-category" onchange="renderAnalytics()">
-            <option value="all">すべて</option>
-          </select>
-        </div>
-      </div>
-
-      <div id="analytics-summary" class="compare-grid"></div>
-
-      <div class="goal-card" id="analytics-goal-card">
-        <div id="analytics-goal"></div>
-      </div>
-
-      <div id="analytics-projection" class="projection-grid"></div>
-      <div id="analytics-projection-note" class="projection-note"></div>
-
-      <div class="analysis-help">
-        棒の高さで「どの月・どの日が多かったか」を直感的に確認できます。日付別では濃い棒が選択月、薄い棒が前月の同日です。
-      </div>
-      <div class="chart-card">
-        <div class="chart-head">
-          <div>
-            <p class="chart-title" id="analytics-chart-title">月別推移</p>
-            <p class="chart-note" id="analytics-chart-note"></p>
-          </div>
-          <button class="btn-sm" onclick="resetAnalysisPeriod()">今月に戻る</button>
-        </div>
-        <div class="chart-summary-line" id="analytics-chart-summary"></div>
-        <div class="chart-scroll" id="analytics-chart"></div>
-        <div class="legend-row" id="analytics-legend"></div>
-        <p class="graph-tip">棒にカーソルを合わせると詳細を確認できます</p>
-      </div>
-    </div>
+<div id="pane-advice" class="hidden">
+  <section class="card"><p class="eyebrow">SALES ADVICE</p><h2 class="serif" style="font-size:24px;margin:8px 0 12px;">売上を伸ばすヒント</h2>
+  <p class="advice-note">保存済みの配送記録と現在の設定単価から、荷物の増減と売上アップの例を自動でコメントします。</p>
+  <div class="pace-controls" style="margin:18px 0;"><label>分析する月<input type="month" id="advice-month" onchange="renderAdvice(true)"></label><label>増やす月の稼働予定日数<input type="number" id="advice-days" min="1" max="31" step="1" oninput="renderAdvice(false)"></label></div>
+  <div id="advice-content" aria-live="polite"></div></section>
+</div>
 
     <!-- 一覧 -->
     <div id="pane-list" class="hidden">
@@ -1638,10 +1246,9 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const DEFAULTS = [{id:'normal',name:'通常',price:155,fixed:true},{id:'cool',name:'クール',price:235,fixed:true},{id:'collect',name:'コレクト',price:232,fixed:true}];
 const CAT_COLORS = {normal:'var(--indigo)',cool:'var(--matcha)',collect:'var(--kincha)'};
-let CU=null, cats=[], records=[], closingDay=0, offDays=[];
+let CU=null, cats=[], records=[], closingDay=0;
 const pins={};
 let calYear, calMonth;
-let analysisView='monthly', analysisMetric='yen';
 let tweaks = {...TWEAKS_DEFAULTS};
 
 /* ══ Tweaks panel ══ */
@@ -1694,16 +1301,6 @@ async function dbCreateUser(u,h){return sb('users','POST',{username:u,pin_hash:h
 async function dbUpdatePin(u,h){return sb(`users?username=eq.${enc(u)}`,'PATCH',{pin_hash:h});}
 async function dbDeleteUser(u){return sb(`users?username=eq.${enc(u)}`,'DELETE');}
 async function dbGetRecords(u){return sb(`delivery_records?username=eq.${enc(u)}&order=date.desc&select=*`);}
-function offDayKey(u){return 'offdays_'+u;}
-function loadOffDays(u){try{const raw=localStorage.getItem(offDayKey(u));const arr=raw?JSON.parse(raw):[];return Array.isArray(arr)?arr:[];}catch(e){return [];}}
-function saveOffDaysLocal(u,days){localStorage.setItem(offDayKey(u),JSON.stringify([...new Set(days)].sort()));}
-function isOffDay(date){return offDays.includes(date);}
-function setOffDay(date,on){
-  if(on){if(!offDays.includes(date))offDays.push(date);}else{offDays=offDays.filter(d=>d!==date);}
-  offDays.sort();
-  if(CU)saveOffDaysLocal(CU,offDays);
-}
-
 async function dbInsertRecord(u,date,counts,memo,saved){return sb('delivery_records','POST',{username:u,date,counts,memo,saved});}
 async function dbUpdateRecord(u,date,counts,memo,saved){return sb(`delivery_records?username=eq.${enc(u)}&date=eq.${date}`,'PATCH',{counts,memo,saved});}
 async function dbDeleteRecord(u,date){return sb(`delivery_records?username=eq.${enc(u)}&date=eq.${date}`,'DELETE');}
@@ -1740,7 +1337,7 @@ function hashPin(p){let h=0;for(let i=0;i<p.length;i++){h=((h<<5)-h)+p.charCodeA
 
 /* ══ UI helpers ══ */
 function ss(name){['login','register','main','settings'].forEach(s=>document.getElementById('screen-'+s).classList.toggle('hidden',s!==name));if(name==='settings')initSettingsScreen();window.scrollTo(0,0);}
-function todayStr(){return new Date().toISOString().slice(0,10);}
+function todayStr(){return fmtDate(new Date());}
 function showLoading(msg='処理中...'){let el=document.getElementById('lov');if(!el){el=document.createElement('div');el.id='lov';el.className='loading-overlay';document.body.appendChild(el);}el.innerHTML=`<div class="loading-box">${msg}</div>`;el.classList.remove('hidden');}
 function hideLoading(){const el=document.getElementById('lov');if(el)el.classList.add('hidden');}
 
@@ -1824,7 +1421,7 @@ async function doRegister(){
   }catch(e){err.textContent='通信エラー: '+e.message;pins.reg='';updDots('reg');}
   hideLoading();
 }
-function doLogout(){CU=null;cats=[];records=[];closingDay=0;offDays=[];pins.login='';updDots('login');document.getElementById('login-name').value='';document.getElementById('login-err').textContent='';ss('login');}
+function doLogout(){CU=null;cats=[];records=[];closingDay=0;pins.login='';updDots('login');document.getElementById('login-name').value='';document.getElementById('login-err').textContent='';ss('login');}
 
 /* ══ Init ══ */
 async function initMain(){
@@ -1838,11 +1435,9 @@ async function initMain(){
     cats=(await dbGetCats(CU))||DEFAULTS;
     records=await dbGetRecords(CU);
     closingDay=await dbGetClosingDay(CU);
-    offDays=loadOffDays(CU);
   }catch(e){cats=DEFAULTS;records=[];closingDay=0;}
   hideLoading();
-  initAnalyticsControls();
-  renderItemsGrid();updateSummary();renderHistory();renderCalendar();renderPeriodBanner();renderAnalytics();switchTab('input');
+  renderItemsGrid();updateSummary();renderHistory();renderCalendar();renderPeriodBanner();switchTab('input');
   updateClosingLabel();
 }
 
@@ -1876,12 +1471,8 @@ function renderPeriodBanner(){
 
 /* ══ Tabs ══ */
 function switchTab(t){
-  ['input','calendar','analysis','list'].forEach(p=>{
-    document.getElementById('pane-'+p).classList.toggle('hidden',p!==t);
-    document.getElementById('tab-'+p).classList.toggle('active',p===t);
-  });
+  ['input','calendar','list','advice'].forEach(p=>{document.getElementById('pane-'+p).classList.toggle('hidden',p!==t);document.getElementById('tab-'+p).classList.toggle('active',p===t);});
   if(t==='calendar')renderCalendar();
-  if(t==='analysis')renderAnalytics();
   if(t==='list')renderHistory();
 }
 
@@ -1936,8 +1527,10 @@ async function saveRecord(){
       records.push({username:CU,date,counts,memo,saved});
       records.sort((a,b)=>b.date.localeCompare(a.date));
     }
-    renderHistory();renderCalendar();renderPeriodBanner();renderAnalytics();
-    showToast('記録を保存しました');
+    const historySaved=savePaceSnapshot(date,counts,saved);
+    renderPace();
+    renderHistory();renderCalendar();renderPeriodBanner();
+    showToast(historySaved?'記録と時刻履歴を保存しました':'記録は保存済み・端末の履歴保存に失敗しました');
   }catch(e){showToast('保存エラー: '+e.message);}
   hideLoading();
 }
@@ -1982,7 +1575,7 @@ function renderHistory(){
 async function deleteRecord(date){
   if(!confirm('この記録を削除しますか？'))return;
   showLoading('削除中...');
-  try{await dbDeleteRecord(CU,date);records=records.filter(r=>r.date!==date);renderHistory();renderCalendar();renderPeriodBanner();renderAnalytics();showToast('削除しました');}
+  try{await dbDeleteRecord(CU,date);records=records.filter(r=>r.date!==date);renderHistory();renderCalendar();renderPeriodBanner();showToast('削除しました');}
   catch(e){showToast('削除エラー: '+e.message);}
   hideLoading();
 }
@@ -1999,31 +1592,6 @@ function exportCSV(){
   });
   const blob=new Blob(['\uFEFF'+header+'\n'+rows.join('\n')],{type:'text/csv;charset=utf-8;'});
   const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=CU+'_配送記録.csv';a.click();URL.revokeObjectURL(url);
-}
-
-
-function toggleOffDay(date){
-  const rec=records.find(r=>r.date===date);
-  const next=!isOffDay(date);
-  if(next&&rec&&recTotal(rec)>0){if(!confirm('この日は配送記録があります。休みの日として設定しますか？\\n記録自体は削除されません。'))return;}
-  setOffDay(date,next);
-  renderCalendar();renderAnalytics();renderPeriodBanner();
-  showToast(next?'休みの日に設定しました':'稼働日に戻しました');
-}
-function workingDaysInMonth(ym){
-  const dim=daysInMonth(ym);let count=0;
-  for(let d=1;d<=dim;d++){const ds=`${ym}-${String(d).padStart(2,'0')}`;if(!isOffDay(ds))count++;}
-  return count;
-}
-function elapsedWorkingDaysInMonth(ym){
-  const elapsed=elapsedDaysInSelectedMonth(ym);let count=0;
-  for(let d=1;d<=elapsed;d++){const ds=`${ym}-${String(d).padStart(2,'0')}`;if(!isOffDay(ds))count++;}
-  return count;
-}
-function remainingWorkingDaysInMonth(ym){
-  const elapsed=elapsedDaysInSelectedMonth(ym),dim=daysInMonth(ym);let count=0;
-  for(let d=elapsed+1;d<=dim;d++){const ds=`${ym}-${String(d).padStart(2,'0')}`;if(!isOffDay(ds))count++;}
-  return count;
 }
 
 /* ══ Calendar ══ */
@@ -2049,8 +1617,8 @@ function renderCalendar(){
     const rec=recMap[dateStr];const isToday=dateStr===today;const hasData=!!rec&&!isOther;
     const isClosing=dateStr===closingDateStr&&!isOther;
     const dow=i%7;const nc=dow===0?'color:var(--beni)':dow===6?'color:var(--indigo)':'';
-    cells+=`<div class="cal-day${isOther?' other-month':''}${isToday?' today':''}${hasData?' has-data':''}${isClosing?' closing-day':''}${isOffDay(dateStr)?' off-day':''}" onclick="calClick('${dateStr}')">
-      <div class="cal-num" style="${nc}">${day}${isClosing?'<span class="cal-closing-mark">締</span>':''}${isOffDay(dateStr)?'<span class="cal-off-mark">休</span>':''}</div>
+    cells+=`<div class="cal-day${isOther?' other-month':''}${isToday?' today':''}${hasData?' has-data':''}${isClosing?' closing-day':''}" onclick="calClick('${dateStr}')">
+      <div class="cal-num" style="${nc}">${day}${isClosing?'<span class="cal-closing-mark">締</span>':''}</div>
       ${hasData?`<div class="cal-yen num">${recYen(rec).toLocaleString()}</div><div class="cal-cnt">${recTotal(rec)}個</div>`:''}
     </div>`;
   }
@@ -2060,14 +1628,10 @@ function renderCalendar(){
 function calClick(dateStr){
   const rec=records.find(r=>r.date===dateStr);
   const el=document.getElementById('cal-detail');
-  const offBtn=`<button class="btn-sm" onclick="toggleOffDay('${dateStr}')">${isOffDay(dateStr)?'稼働日に戻す':'この日を休みにする'}</button>`;
-  if(!rec){
-    el.innerHTML=`<div class="card"><p style="font-size:12px;color:var(--muted);margin:0 0 12px;letter-spacing:0.04em;">${dateStr} — ${isOffDay(dateStr)?'休み':'記録なし'}</p><div class="offday-actions"><button class="btn-sm" onclick="jumpToInput('${dateStr}')">この日の記録を入力</button>${offBtn}</div></div>`;
-    return;
-  }
+  if(!rec){el.innerHTML=`<div class="card"><p style="font-size:12px;color:var(--muted);margin:0 0 12px;letter-spacing:0.04em;">${dateStr} — 記録なし</p><button class="btn-sm" onclick="jumpToInput('${dateStr}')">この日の記録を入力</button></div>`;return;}
   const tags=cats.map(cat=>{const n=(rec.counts||{})[cat.id]||0;return n>0?`<span class="tag ${tagCls(cat.id)}"><span class="tag-dot"></span>${cat.name} ${n}個</span>`:''}).join('');
   const {start,end}=getPeriodForDate(dateStr);
-  el.innerHTML=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;"><span class="serif" style="font-size:18px;font-weight:500;">${dateStr}${isOffDay(dateStr)?' <span style="font-size:11px;color:var(--muted);font-family:var(--font-sans);">休み設定</span>':''}</span><span class="serif num" style="font-size:22px;font-weight:500;color:var(--ink);">${recYen(rec).toLocaleString()}<span style="font-size:12px;color:var(--muted);margin-left:2px;font-family:var(--font-sans);">円</span></span></div><p class="eyebrow" style="margin:0 0 12px;">締め期間 ${getPeriodLabel(start,end)}</p><div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;">${tags}</div>${rec.memo?`<p style="font-size:13px;color:var(--muted);margin:0 0 12px;font-style:italic;line-height:1.6;">「${rec.memo}」</p>`:''}<div class="offday-actions"><button class="btn-sm" onclick="jumpToInput('${dateStr}')">編集</button>${offBtn}</div></div>`;
+  el.innerHTML=`<div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:4px;"><span class="serif" style="font-size:18px;font-weight:500;">${dateStr}</span><span class="serif num" style="font-size:22px;font-weight:500;color:var(--ink);">${recYen(rec).toLocaleString()}<span style="font-size:12px;color:var(--muted);margin-left:2px;font-family:var(--font-sans);">円</span></span></div><p class="eyebrow" style="margin:0 0 12px;">締め期間 ${getPeriodLabel(start,end)}</p><div style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;">${tags}</div>${rec.memo?`<p style="font-size:13px;color:var(--muted);margin:0 0 12px;font-style:italic;line-height:1.6;">「${rec.memo}」</p>`:''}<button class="btn-sm" onclick="jumpToInput('${dateStr}')">編集</button></div>`;
 }
 function jumpToInput(dateStr){
   const rec=records.find(r=>r.date===dateStr);
@@ -2076,372 +1640,6 @@ function jumpToInput(dateStr){
   else{clearForm();document.getElementById('record-date').value=dateStr;}
   switchTab('input');
 }
-
-
-/* ══ Analytics / Graphs ══ */
-function initAnalyticsControls(){
-  const m=document.getElementById('analysis-month');
-  if(m && !m.value)m.value=todayStr().slice(0,7);
-  const sel=document.getElementById('analysis-category');
-  if(sel){
-    const cur=sel.value||'all';
-    sel.innerHTML='<option value="all">すべて</option>'+cats.map(c=>`<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
-    sel.value=cats.some(c=>c.id===cur)?cur:'all';
-  }
-}
-function escapeHtml(s){
-  return String(s??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
-}
-function setAnalysisView(v){
-  analysisView=v;
-  document.getElementById('ana-view-monthly').classList.toggle('active',v==='monthly');
-  document.getElementById('ana-view-daily').classList.toggle('active',v==='daily');
-  renderAnalytics();
-}
-function setAnalysisMetric(v){
-  analysisMetric=v;
-  document.getElementById('ana-metric-yen').classList.toggle('active',v==='yen');
-  document.getElementById('ana-metric-count').classList.toggle('active',v==='count');
-  renderAnalytics();
-}
-function resetAnalysisPeriod(){
-  const m=document.getElementById('analysis-month');
-  if(m)m.value=todayStr().slice(0,7);
-  renderAnalytics();
-}
-function analysisCategory(){
-  const el=document.getElementById('analysis-category');
-  return el?el.value:'all';
-}
-function recMetric(r, metric=analysisMetric, catId=analysisCategory()){
-  if(metric==='count'){
-    if(catId==='all')return recTotal(r);
-    return (r.counts||{})[catId]||0;
-  }
-  if(catId==='all')return recYen(r);
-  const cat=cats.find(c=>c.id===catId);
-  return ((r.counts||{})[catId]||0)*(cat?cat.price:0);
-}
-function monthShift(ym, delta){
-  const [y,m]=ym.split('-').map(Number);
-  const d=new Date(y,m-1+delta,1);
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-}
-function monthLabel(ym){
-  const [y,m]=ym.split('-').map(Number);
-  return `${y}/${m}`;
-}
-function monthTotal(ym){
-  return records.filter(r=>r.date.startsWith(ym+'-')).reduce((s,r)=>s+recMetric(r),0);
-}
-function formatMetric(v, withUnit=true){
-  const n=Math.round(v);
-  const unit=analysisMetric==='yen'?'円':'個';
-  return n.toLocaleString()+(withUnit?unit:'');
-}
-function formatSigned(v){
-  const n=Math.round(v);
-  return (n>0?'+':'')+n.toLocaleString();
-}
-function formatCompactMetric(v){
-  const n=Math.round(v);
-  if(analysisMetric==='yen'){
-    if(Math.abs(n)>=10000)return (n/10000).toFixed(n%10000===0?0:1)+'万';
-    if(Math.abs(n)>=1000)return (n/1000).toFixed(n%1000===0?0:1)+'千';
-  }
-  if(Math.abs(n)>=1000)return (n/1000).toFixed(n%1000===0?0:1)+'k';
-  return n.toLocaleString();
-}
-function renderAnalyticsSummary(selectedYm){
-  const cur=monthTotal(selectedYm);
-  const prevYm=monthShift(selectedYm,-1);
-  const prev=monthTotal(prevYm);
-  const diff=cur-prev;
-  let pctText='—', pillCls='', arrow='→';
-  if(prev>0){
-    const pct=(diff/prev)*100;
-    pctText=(pct>=0?'+':'')+pct.toFixed(1)+'%';
-    if(diff>0){pillCls='up';arrow='↑';}
-    else if(diff<0){pillCls='down';arrow='↓';}
-  }else if(cur>0){ pctText='+100%'; pillCls='up'; arrow='↑'; }
-  const unit=analysisMetric==='yen'?'円':'個';
-  const catId=analysisCategory();
-  const catName=catId==='all'?'すべて':(cats.find(c=>c.id===catId)?.name||'');
-  document.getElementById('analytics-summary').innerHTML=`
-    <div class="compare-card">
-      <p class="cc-label">${monthLabel(selectedYm)} · ${escapeHtml(catName)}</p>
-      <p class="cc-value">${Math.round(cur).toLocaleString()}<span class="metric-unit">${unit}</span></p>
-      <p class="cc-sub">選択月の合計</p>
-    </div>
-    <div class="compare-card">
-      <p class="cc-label">${monthLabel(prevYm)} · 前月</p>
-      <p class="cc-value">${Math.round(prev).toLocaleString()}<span class="metric-unit">${unit}</span></p>
-      <p class="cc-sub">比較対象</p>
-    </div>
-    <div class="compare-card">
-      <p class="cc-label">前月との比較</p>
-      <div class="analytics-kpi">
-        <p class="cc-value">${formatSigned(diff)}<span class="metric-unit">${unit}</span></p>
-        <span class="trend-pill ${pillCls}">${arrow} ${pctText}</span>
-      </div>
-      <p class="cc-sub">${diff>0?'前月より増加':diff<0?'前月より減少':'前月と同じ'}</p>
-    </div>`;
-}
-
-function monthRecordStats(ym){
-  const recs=records.filter(r=>r.date.startsWith(ym+'-'));
-  const activeRecs=recs.filter(r=>recMetric(r)>0);
-  const total=recs.reduce((s,r)=>s+recMetric(r),0);
-  const activeDays=activeRecs.length;
-  const avgPerActiveDay=activeDays?total/activeDays:0;
-  return {recs,activeDays,total,avgPerActiveDay};
-}
-function daysInMonth(ym){
-  const [y,m]=ym.split('-').map(Number);
-  return new Date(y,m,0).getDate();
-}
-function elapsedDaysInSelectedMonth(ym){
-  const now=new Date();
-  const [y,m]=ym.split('-').map(Number);
-  const dim=daysInMonth(ym);
-  if(now.getFullYear()===y && now.getMonth()+1===m)return Math.min(now.getDate(),dim);
-  const selectedStart=new Date(y,m-1,1);
-  const currentStart=new Date(now.getFullYear(),now.getMonth(),1);
-  return selectedStart<currentStart?dim:0;
-}
-function projectionForMonth(ym){
-  const cur=monthRecordStats(ym);
-  const prevYm=monthShift(ym,-1);
-  const prev=monthRecordStats(prevYm);
-  const totalWork=workingDaysInMonth(ym);
-  const elapsedWork=elapsedWorkingDaysInMonth(ym);
-  const remainingWork=remainingWorkingDaysInMonth(ym);
-  const currentWorkDailyAvg=elapsedWork>0?cur.total/elapsedWork:0;
-  const paceProjection=cur.total+currentWorkDailyAvg*remainingWork;
-  const prevWorkDays=workingDaysInMonth(prevYm);
-  const prevWorkDailyAvg=prevWorkDays>0?prev.total/prevWorkDays:0;
-  const prevPatternProjection=cur.total+prevWorkDailyAvg*remainingWork;
-  let progress=totalWork>0?elapsedWork/totalWork:0;
-  let weightCurrent=Math.min(.8,Math.max(.35,progress));
-  if(elapsedWork===0)weightCurrent=0;
-  const blended=elapsedWork===0?prev.total:paceProjection*weightCurrent+prevPatternProjection*(1-weightCurrent);
-  return {cur,prevYm,prev,totalWork,elapsedWork,remainingWork,currentWorkDailyAvg,paceProjection,prevWorkDailyAvg,prevPatternProjection,blended,weightCurrent};
-}
-
-function previousMonthWithData(ym, maxLookback=12){
-  for(let i=1;i<=maxLookback;i++){
-    const candidate=monthShift(ym,-i);
-    const stats=monthRecordStats(candidate);
-    if(stats.total>0)return {ym:candidate,stats,monthsBack:i};
-  }
-  return null;
-}
-function autoGoalForMonth(ym){
-  const prev=previousMonthWithData(ym,12);
-  if(!prev)return null;
-
-  // Easy-to-understand automatic target:
-  // previous month's actual result + 5%.
-  // Rounded to a practical unit so the target looks clean.
-  const raw=prev.stats.total*1.05;
-  let roundUnit=1;
-  if(analysisMetric==='yen'){
-    if(raw>=100000)roundUnit=5000;
-    else if(raw>=10000)roundUnit=1000;
-    else roundUnit=100;
-  }else{
-    if(raw>=1000)roundUnit=50;
-    else if(raw>=100)roundUnit=10;
-    else roundUnit=1;
-  }
-  const target=Math.ceil(raw/roundUnit)*roundUnit;
-  return {
-    target,
-    baseYm:prev.ym,
-    baseTotal:prev.stats.total,
-    monthsBack:prev.monthsBack,
-    growthRate:5
-  };
-}
-function renderAutoGoal(selectedYm){
-  const root=document.getElementById('analytics-goal');
-  const card=document.getElementById('analytics-goal-card');
-  if(!root||!card)return;
-  const goal=autoGoalForMonth(selectedYm);
-  if(!goal){card.style.display='none';return;}
-  card.style.display='block';
-  const cur=monthRecordStats(selectedYm);
-  const pct=goal.target>0?(cur.total/goal.target)*100:0;
-  const pctClamped=Math.max(0,Math.min(100,pct));
-  const remaining=Math.max(goal.target-cur.total,0);
-  const totalWorkingDays=workingDaysInMonth(selectedYm);
-  const elapsedWorkingDays=elapsedWorkingDaysInMonth(selectedYm);
-  const leftWorkingDays=remainingWorkingDaysInMonth(selectedYm);
-  const requiredPerWorkday=leftWorkingDays>0?remaining/leftWorkingDays:remaining;
-  const offCount=daysInMonth(selectedYm)-totalWorkingDays;
-  const basisText=goal.monthsBack===1?`${monthLabel(goal.baseYm)} 実績 ${formatMetric(goal.baseTotal)} を基準に +${goal.growthRate}%`:`${monthLabel(goal.baseYm)} の直近実績 ${formatMetric(goal.baseTotal)} を基準に +${goal.growthRate}%`;
-  root.innerHTML=`
-    <div class="goal-top"><div><p class="eyebrow" style="margin-bottom:6px;">AUTO GOAL</p><p class="goal-title">${monthLabel(selectedYm)} 自動目標</p><p class="goal-meta">${basisText}</p></div><div style="text-align:right;"><p class="goal-value">${formatMetric(goal.target)}</p><p class="goal-meta">自動設定</p></div></div>
-    <div class="goal-progress-wrap"><div class="goal-progress-head"><span>達成率 ${pct.toFixed(1)}%</span><span>${formatMetric(cur.total)} / ${formatMetric(goal.target)}</span></div><div class="goal-track"><div class="goal-fill" style="width:${pctClamped}%"></div></div></div>
-    <div class="goal-stats"><div class="goal-stat"><p class="goal-stat-label">あと</p><p class="goal-stat-value">${formatMetric(remaining)}</p></div><div class="goal-stat"><p class="goal-stat-label">残り稼働予定日</p><p class="goal-stat-value">${leftWorkingDays.toLocaleString()}日</p></div><div class="goal-stat"><p class="goal-stat-label">必要ペース / 稼働日</p><p class="goal-stat-value">${leftWorkingDays>0?formatMetric(requiredPerWorkday):'—'}</p></div></div>
-    <p class="goal-meta" style="margin-top:10px;">今月の稼働予定 ${totalWorkingDays}日・休み ${offCount}日（ここまでの稼働予定 ${elapsedWorkingDays}日）</p>`;
-}
-
-function renderProjection(selectedYm){
-  const box=document.getElementById('analytics-projection');
-  const note=document.getElementById('analytics-projection-note');
-  if(!box||!note)return;
-  const p=projectionForMonth(selectedYm);
-  const todayYm=todayStr().slice(0,7);
-  const isCurrent=selectedYm===todayYm;
-  const avgActive=p.cur.avgPerActiveDay;
-  const scheduledAvg=p.elapsedWork>0?p.cur.total/p.elapsedWork:0;
-  if(!isCurrent){
-    box.innerHTML=`<div class="projection-card"><p class="projection-label">1日平均（実稼働日）</p><p class="projection-value">${formatMetric(avgActive)}</p><p class="projection-sub">${p.cur.activeDays}日記録ベース</p></div><div class="projection-card"><p class="projection-label">1日平均（稼働予定日）</p><p class="projection-value">${formatMetric(p.totalWork?p.cur.total/p.totalWork:0)}</p><p class="projection-sub">休みを除く ${p.totalWork}日で計算</p></div><div class="projection-card"><p class="projection-label">月合計</p><p class="projection-value">${formatMetric(p.cur.total)}</p><p class="projection-sub">確定済み実績</p></div>`;
-    note.textContent='過去月は確定済みのため、休みの日を除いた稼働予定日ベースの平均を表示しています。';return;
-  }
-  box.innerHTML=`<div class="projection-card"><p class="projection-label">1日平均（実稼働日）</p><p class="projection-value">${formatMetric(avgActive)}</p><p class="projection-sub">${p.cur.activeDays}日記録ベース</p></div><div class="projection-card"><p class="projection-label">1日平均（稼働予定日）</p><p class="projection-value">${formatMetric(scheduledAvg)}</p><p class="projection-sub">休みを除くここまで ${p.elapsedWork}日</p></div><div class="projection-card emphasis"><p class="projection-label">月末予測</p><p class="projection-value">${formatMetric(p.blended)}</p><p class="projection-sub">今月ペース＋前月ペースから推定</p></div>`;
-  const curWeight=Math.round(p.weightCurrent*100),prevWeight=100-curWeight;
-  note.textContent=`予測は今月の稼働予定ペースを${curWeight}%、前月の稼働日平均ペースを${prevWeight}%程度で加味した参考値です。 残り稼働予定 ${p.remainingWork}日。カレンダーで休みを変更すると自動で再計算されます。`;
-}
-
-function renderAnalytics(){
-  const root=document.getElementById('analytics-chart');
-  if(!root)return;
-  initAnalyticsControls();
-  const monthEl=document.getElementById('analysis-month');
-  const selectedYm=(monthEl&&monthEl.value)||todayStr().slice(0,7);
-  renderAnalyticsSummary(selectedYm);
-  renderAutoGoal(selectedYm);
-  renderProjection(selectedYm);
-
-  const title=document.getElementById('analytics-chart-title');
-  const note=document.getElementById('analytics-chart-note');
-  const legend=document.getElementById('analytics-legend');
-  const chartSummary=document.getElementById('analytics-chart-summary');
-  const unit=analysisMetric==='yen'?'円':'個';
-  const metricName=analysisMetric==='yen'?'金額':'個数';
-
-  if(analysisView==='monthly'){
-    const months=[];
-    for(let i=11;i>=0;i--)months.push(monthShift(selectedYm,-i));
-    const vals=months.map(ym=>monthTotal(ym));
-    const maxVal=Math.max(...vals,0);
-    const avg=vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:0;
-    const maxIdx=vals.indexOf(maxVal);
-    title.textContent='月別推移 — 過去12ヶ月';
-    note.textContent=`${metricName} / ${unit} · 月ごとの増減を確認`;
-    const selectedStats=monthRecordStats(selectedYm);
-    chartSummary.innerHTML=`
-      <div><span class="small">選択月の1日平均</span><br><span class="big">${formatMetric(selectedStats.avgPerActiveDay)}</span></div>
-      <div><span class="small">12ヶ月平均</span><br><span class="big">${formatMetric(avg)}</span></div>
-      <div><span class="small">最高</span><br><span class="big">${maxIdx>=0?monthLabel(months[maxIdx])+' · '+formatMetric(maxVal):'—'}</span></div>`;
-    root.innerHTML=buildBarChart(months.map(ym=>({label:monthLabel(ym),value:monthTotal(ym)})),unit,720,290,avg);
-    legend.innerHTML='<span><span class="legend-dot"></span>各月の合計</span><span>──────── 平均ライン</span>';
-  }else{
-    const [y,m]=selectedYm.split('-').map(Number);
-    const days=new Date(y,m,0).getDate();
-    const prevYm=monthShift(selectedYm,-1);
-    const [py,pm]=prevYm.split('-').map(Number);
-    const prevDays=new Date(py,pm,0).getDate();
-    const rows=[];
-    for(let d=1;d<=days;d++){
-      const dd=String(d).padStart(2,'0');
-      const date=`${selectedYm}-${dd}`;
-      const current=records.filter(r=>r.date===date).reduce((s,r)=>s+recMetric(r),0);
-      let previous=null;
-      if(d<=prevDays){
-        const pdate=`${prevYm}-${dd}`;
-        previous=records.filter(r=>r.date===pdate).reduce((s,r)=>s+recMetric(r),0);
-      }
-      rows.push({label:String(d),value:current,previous});
-    }
-    const activeDays=rows.filter(r=>r.value>0).length;
-    const total=rows.reduce((s,r)=>s+r.value,0);
-    const avg=activeDays?total/activeDays:0;
-    const best=rows.reduce((a,b)=>b.value>a.value?b:a,{label:'—',value:0});
-    title.textContent=`日付別推移 — ${monthLabel(selectedYm)}`;
-    note.textContent=`${metricName} / ${unit} · 前月の同日と比較`;
-    const prevStats=monthRecordStats(prevYm);
-    chartSummary.innerHTML=`
-      <div><span class="small">今月 稼働日平均</span><br><span class="big">${formatMetric(avg)}</span></div>
-      <div><span class="small">前月 稼働日平均</span><br><span class="big">${formatMetric(prevStats.avgPerActiveDay)}</span></div>
-      <div><span class="small">最高日</span><br><span class="big">${best.value>0?best.label+'日 · '+formatMetric(best.value):'—'}</span></div>`;
-    root.innerHTML=buildDailyCompareChart(rows,unit,avg);
-    legend.innerHTML='<span><span class="legend-dot"></span>選択月</span><span><span class="legend-dot prev"></span>前月の同日</span><span>──────── 稼働日平均</span>';
-  }
-}
-function niceMax(max){
-  if(max<=0)return 10;
-  const p=Math.pow(10,Math.floor(Math.log10(max)));
-  const n=max/p;
-  const nice=n<=1?1:n<=2?2:n<=5?5:10;
-  return nice*p;
-}
-function svgText(x,y,txt,attrs=''){
-  return `<text x="${x}" y="${y}" ${attrs}>${escapeHtml(txt)}</text>`;
-}
-function buildBarChart(rows,unit,width=720,height=290,avg=0){
-  if(!rows.length)return '<div class="chart-empty">— データがありません —</div>';
-  const ml=58,mr=16,mt=28,mb=46;
-  const iw=width-ml-mr, ih=height-mt-mb;
-  const max=niceMax(Math.max(...rows.map(r=>r.value),avg,0));
-  const step=iw/rows.length, bw=Math.max(16,Math.min(38,step*.58));
-  let g='';
-  for(let i=0;i<=4;i++){
-    const v=max*(i/4), y=mt+ih-(ih*i/4);
-    g+=`<line x1="${ml}" y1="${y}" x2="${width-mr}" y2="${y}" stroke="var(--line)" stroke-width="1"/>`;
-    g+=svgText(ml-8,y+4,Math.round(v).toLocaleString(),'text-anchor="end" font-size="9" fill="var(--muted)"');
-  }
-  if(avg>0){
-    const ay=mt+ih-(ih*(avg/max));
-    g+=`<line x1="${ml}" y1="${ay}" x2="${width-mr}" y2="${ay}" stroke="var(--muted)" stroke-width="1.2" stroke-dasharray="5 5" opacity=".75"/>`;
-    g+=svgText(width-mr-2,ay-5,'平均','text-anchor="end" font-size="9" fill="var(--muted)"');
-  }
-  rows.forEach((r,i)=>{
-    const x=ml+i*step+(step-bw)/2;
-    const h=max?ih*(r.value/max):0, y=mt+ih-h;
-    g+=`<rect x="${x}" y="${y}" width="${bw}" height="${Math.max(h,2)}" rx="4" fill="var(--indigo)" opacity="${r.value>0?.9:.22}">
-      <title>${r.label}: ${formatMetric(r.value)}</title>
-    </rect>`;
-    if(r.value>0)g+=svgText(x+bw/2,Math.max(12,y-6),formatCompactMetric(r.value),'text-anchor="middle" font-size="9" font-weight="600" fill="var(--ink)"');
-    const shortLabel=r.label.replace(/^\d{4}\//,'');
-    g+=svgText(x+bw/2,height-18,shortLabel,'text-anchor="middle" font-size="9" fill="var(--muted)"');
-  });
-  return `<svg class="analytics-svg" viewBox="0 0 ${width} ${height}" role="img" aria-label="月別グラフ">${g}</svg>`;
-}
-function buildDailyCompareChart(rows,unit,avg=0){
-  const step=28, ml=58,mr=16,mt=28,mb=38;
-  const width=Math.max(760,ml+mr+rows.length*step), height=300, ih=height-mt-mb;
-  const max=niceMax(Math.max(...rows.flatMap(r=>[r.value,r.previous||0]),avg,0));
-  const bestVal=Math.max(...rows.map(x=>x.value),0);
-  let g='';
-  for(let i=0;i<=4;i++){
-    const v=max*(i/4), y=mt+ih-(ih*i/4);
-    g+=`<line x1="${ml}" y1="${y}" x2="${width-mr}" y2="${y}" stroke="var(--line)" stroke-width="1"/>`;
-    g+=svgText(ml-8,y+4,Math.round(v).toLocaleString(),'text-anchor="end" font-size="9" fill="var(--muted)"');
-  }
-  if(avg>0){
-    const ay=mt+ih-(ih*(avg/max));
-    g+=`<line x1="${ml}" y1="${ay}" x2="${width-mr}" y2="${ay}" stroke="var(--muted)" stroke-width="1.2" stroke-dasharray="5 5" opacity=".75"/>`;
-    g+=svgText(width-mr-2,ay-5,'平均','text-anchor="end" font-size="9" fill="var(--muted)"');
-  }
-  rows.forEach((r,i)=>{
-    const center=ml+i*step+step/2, bw=8;
-    if(r.previous!==null){
-      const ph=max?ih*(r.previous/max):0;
-      g+=`<rect x="${center-bw-2}" y="${mt+ih-ph}" width="${bw}" height="${Math.max(ph,1.5)}" rx="2" fill="var(--muted-2)" opacity=".48"><title>${r.label}日 前月: ${formatMetric(r.previous)}</title></rect>`;
-    }
-    const h=max?ih*(r.value/max):0;
-    g+=`<rect x="${center+2}" y="${mt+ih-h}" width="${bw}" height="${Math.max(h,1.5)}" rx="2" fill="var(--indigo)" opacity="${r.value>0?.95:.18}"><title>${r.label}日: ${formatMetric(r.value)}</title></rect>`;
-    if(r.value>0 && (r.value===bestVal || i%5===0)){
-      g+=svgText(center+6,Math.max(12,mt+ih-h-5),formatCompactMetric(r.value),'text-anchor="middle" font-size="8" font-weight="600" fill="var(--ink)"');
-    }
-    g+=svgText(center,height-13,r.label,'text-anchor="middle" font-size="9" fill="var(--muted)"');
-  });
-  return `<svg class="analytics-svg" style="width:${width}px" viewBox="0 0 ${width} ${height}" role="img" aria-label="日付別比較グラフ">${g}</svg>`;
-}
-
 
 /* ══ Settings ══ */
 function initSettingsScreen(){
@@ -2505,7 +1703,7 @@ async function addCategory(){
   if(cats.find(c=>c.name===name)){err.textContent='この種別名はすでに存在します';return;}
   cats.push({id:'cat_'+Date.now(),name,price,fixed:false});
   showLoading('保存中...');
-  try{await dbSaveCats(CU,cats);renderCatList();renderItemsGrid();updateSummary();initAnalyticsControls();renderAnalytics();document.getElementById('new-cat-name').value='';document.getElementById('new-cat-price').value='';err.textContent='';showToast('種別を追加しました');}
+  try{await dbSaveCats(CU,cats);renderCatList();renderItemsGrid();updateSummary();document.getElementById('new-cat-name').value='';document.getElementById('new-cat-price').value='';err.textContent='';showToast('種別を追加しました');}
   catch(e){cats.pop();err.textContent='保存エラー: '+e.message;}
   hideLoading();
 }
@@ -2513,7 +1711,7 @@ async function removeCategory(i){
   if(!confirm('この種別を削除しますか？'))return;
   const removed=cats.splice(i,1);
   showLoading('削除中...');
-  try{await dbSaveCats(CU,cats);renderCatList();renderItemsGrid();updateSummary();initAnalyticsControls();renderAnalytics();showToast('削除しました');}
+  try{await dbSaveCats(CU,cats);renderCatList();renderItemsGrid();updateSummary();showToast('削除しました');}
   catch(e){cats.splice(i,0,...removed);showToast('削除エラー: '+e.message);}
   hideLoading();
 }
@@ -2538,7 +1736,6 @@ async function deleteAccount(){
     await sb(`delivery_records?username=eq.${enc(CU)}`,'DELETE');
     await sb(`categories?username=eq.${enc(CU)}`,'DELETE');
     localStorage.removeItem('closing_'+CU);
-    localStorage.removeItem(offDayKey(CU));
     CU=null;ss('login');
   }catch(e){showToast('削除エラー: '+e.message);}
   hideLoading();
@@ -2549,6 +1746,115 @@ let toastTimer=null;
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');if(toastTimer)clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2400);}
 
 ss('login');
+
+/* Device-local snapshots; database schema remains unchanged. */
+function paceKey(){return 'delivery_pace_v1_'+CU;}
+function readPace(){try{const d=JSON.parse(localStorage.getItem(paceKey())||'{}');return d&&typeof d==='object'&&!Array.isArray(d)?d:{};}catch(e){return {};}}
+function writePace(data){try{localStorage.setItem(paceKey(),JSON.stringify(data));return true;}catch(e){return false;}}
+function savePaceSnapshot(date,counts,at){
+  const data=readPace();const day=data[date]||{history:[]};
+  if(!Array.isArray(day.history))day.history=[];
+  day.history.push({at,counts:{...counts},total:Object.values(counts).reduce((a,b)=>a+Number(b||0),0)});
+  data[date]=day;return writePace(data);
+}
+function savePacePlan(){
+  const date=document.getElementById('record-date').value;if(!date||!CU)return;
+  const data=readPace();const day=data[date]||{history:[]};
+  const target=document.getElementById('pace-target');
+  if(!target.checkValidity()){showToast('予定個数は0以上の整数で入力してください');return;}
+  day.start=document.getElementById('pace-start').value;day.target=Math.max(0,Number(target.value)||0);
+  data[date]=day;if(!writePace(data))showToast('予定を保存できませんでした');renderPace();
+}
+function calculatePace(history,startAt,target,date,now=Date.now()){
+  const h=history.filter(x=>Number.isFinite(x.at)&&Number.isFinite(x.total)&&fmtDate(new Date(x.at))===date).sort((a,b)=>a.at-b.at);
+  if(!h.length)return {rate:null,latest:null,remaining:target,eta:null,corrected:false};
+  const latest=h[h.length-1];let base=h[0],corrected=false;
+  for(let i=1;i<h.length;i++)if(h[i].total<h[i-1].total){base=h[i];corrected=true;}
+  if(!corrected&&Number.isFinite(startAt)&&startAt<base.at)base={at:startAt,total:0};
+  const hours=(latest.at-base.at)/3600000;
+  const rate=hours>0?(latest.total-base.total)/hours:null;
+  const remaining=target>0?Math.max(0,target-latest.total):null;
+  const eta=remaining>0&&rate>0?latest.at+remaining/rate*3600000:null;
+  return {rate,latest,remaining,eta,corrected,stale:now-latest.at>3600000};
+}
+function renderPace(){
+  if(!CU)return;const date=document.getElementById('record-date').value;
+  const day=readPace()[date]||{history:[]};const history=Array.isArray(day.history)?day.history:[];
+  document.getElementById('pace-start').value=day.start||'';document.getElementById('pace-target').value=day.target||'';
+  const startAt=day.start?new Date(date+'T'+day.start+':00').getTime():NaN;
+  const p=calculatePace(history,startAt,Number(day.target)||0,date);
+  const time=at=>new Date(at).toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+  let status=!p.latest?'記録を保存すると履歴が表示されます。':p.rate===null?'開始時刻を入力するか、時間を空けて2回以上保存するとペースが計算されます。':p.rate===0?'個数の増加がないため終了時刻は予測できません。':'最終保存時点のペースから計算';
+  if(p.corrected)status+='（個数の減少後から再計算）';
+  const end=p.remaining===0?'予定個数を達成':p.eta?(fmtDate(new Date(p.eta))!==date?fmtDate(new Date(p.eta))+' ':'')+time(p.eta):'—';
+  document.getElementById('pace-metrics').innerHTML=`<div class="summary-grid"><div class="metric"><p class="metric-label">1時間あたり</p><p class="metric-value">${p.rate!==null?p.rate.toFixed(1):'—'}<span class="metric-unit">個</span></p></div><div class="metric"><p class="metric-label">残り個数</p><p class="metric-value">${p.remaining===null?'—':p.remaining}<span class="metric-unit">個</span></p></div><div class="metric accent"><p class="metric-label">終了予想時刻</p><p class="metric-value" style="font-size:22px;">${end}</p></div></div><p style="font-size:12px;color:var(--muted);line-height:1.8;">${status}${p.latest?' / 最終保存 '+time(p.latest.at):''}${p.stale?' / 記録から1時間以上経過。最新の個数を保存してください。':''}</p>${day.target>0&&p.latest?`<div class="pace-progress"><div style="width:${Math.min(100,p.latest.total/day.target*100)}%"></div></div><p style="font-size:12px;color:var(--muted);">${p.latest.total} / ${day.target}個</p>`:''}`;
+  document.getElementById('pace-history').innerHTML=history.length?`<h3 style="font-size:14px;margin-bottom:8px;">保存履歴</h3><div style="overflow:auto;max-height:320px;"><table class="pace-table"><thead><tr><th>保存日時</th><th>累計個数</th><th>前回から</th><th>内訳</th></tr></thead><tbody>${history.map((x,i)=>{const delta=i?x.total-history[i-1].total:null;return `<tr><td>${fmtDate(new Date(x.at))}<br>${time(x.at)}</td><td>${x.total}個</td><td>${delta===null?'—':(delta>=0?'+':'')+delta+'個'+(delta<0?'（修正）':'')}</td><td>${Object.entries(x.counts||{}).map(([id,n])=>{const cat=cats.find(c=>c.id===id);return escapePace(cat?cat.name:id)+' '+Number(n||0)+'個';}).join(' / ')}</td></tr>`;}).reverse().join('')}</tbody></table></div>`:'<p style="font-size:12px;color:var(--muted);">まだ保存履歴がありません。過去日の入力は履歴に残りますが、その日のペース計算から除外します。</p>';
+}
+function escapePace(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+const originalSwitchTab=switchTab;switchTab=function(t){originalSwitchTab(t);if(t==='input')renderPace();};
+document.getElementById('record-date').addEventListener('change',()=>jumpToInput(document.getElementById('record-date').value));
+
+
+// Local deterministic advice; no external AI service or extra data transfer.
+const adviceExtras=new Map();
+function advicePreviousMonth(month){const [y,m]=month.split('-').map(Number);return fmtDate(new Date(y,m-2,1)).slice(0,7);}
+function adviceStats(data,categories,month){
+  const rows=data.filter(r=>r.date&&r.date.slice(0,7)===month);
+  const active=new Set(rows.filter(r=>Object.values(r.counts||{}).some(n=>Number(n)>0)).map(r=>r.date));
+  const counts=Object.fromEntries(categories.map(c=>[c.id,rows.reduce((s,r)=>s+Math.max(0,Number((r.counts||{})[c.id])||0),0)]));
+  return {hasData:rows.length>0,days:active.size,counts,revenue:categories.reduce((s,c)=>s+counts[c.id]*Math.max(0,Number(c.price)||0),0)};
+}
+function adviceModel(data,categories,month,days){
+  const current=adviceStats(data,categories,month),previous=adviceStats(data,categories,advicePreviousMonth(month));
+  return {current,previous,items:categories.map(c=>{
+    const avg=current.days?current.counts[c.id]/current.days:0,prior=previous.days?previous.counts[c.id]/previous.days:0;
+    const recover=previous.days&&current.days?Math.max(0,Math.ceil(prior-avg-1e-9)):0;
+    return {id:c.id,name:c.name,price:Math.max(0,Number(c.price)||0),count:current.counts[c.id],priorCount:previous.counts[c.id],avg,prior,recover,recoverYen:recover*Math.max(0,Number(c.price)||0)*days};
+  })};
+}
+function initAdvice(){
+  const input=document.getElementById('advice-month');
+  if(!input.value)input.value=advicePreviousMonth(todayStr().slice(0,7));
+  renderAdvice(true);
+}
+function renderAdvice(resetDays=false){
+  const month=document.getElementById('advice-month').value,el=document.getElementById('advice-content');
+  if(!/^\d{4}-\d{2}$/.test(month)){el.textContent='分析する月を選んでください。';return;}
+  const stats=adviceStats(records,cats,month),dayInput=document.getElementById('advice-days');
+  if(resetDays)dayInput.value=stats.days||20;
+  const days=Number(dayInput.value);
+  if(!Number.isInteger(days)||days<1||days>31){el.textContent='稼働予定日数は1〜31日の整数で入力してください。';return;}
+  const model=adviceModel(records,cats,month,days),prevMonth=advicePreviousMonth(month),yen=n=>Math.round(n).toLocaleString('ja-JP');
+  if(!model.current.hasData){el.innerHTML='<div class="advice-comment">この月には記録がありません。記録のある月を選ぶと、荷物の増減や売上アップの試算を表示します。</div>';return;}
+  const partial=month===todayStr().slice(0,7);
+  let html=`<div class="summary-grid"><div class="metric"><p class="metric-label">${month} の売上（現在単価換算）</p><p class="metric-value" style="font-size:24px;">${yen(stats.revenue)}<span class="metric-unit">円</span></p></div><div class="metric"><p class="metric-label">記録から確認できた稼働日</p><p class="metric-value">${stats.days}<span class="metric-unit">日</span></p></div><div class="metric"><p class="metric-label">1稼働日あたりの売上</p><p class="metric-value" style="font-size:24px;">${stats.days?yen(stats.revenue/stats.days):'—'}<span class="metric-unit">円</span></p></div></div>`;
+  html+=`<p class="advice-note">比較：${month} と ${prevMonth}。暦月で集計し、締め期間とは別です。${partial?'今月は途中経過です。':''}稼働日は個数がある記録の日数です。未入力日がある場合は記録を補ってからご確認ください。</p>`;
+  if(!model.previous.days)html+='<div class="advice-comment">比較先の月に稼働記録がないため、増減の判断は保留します。下の欄で荷物を追加できた場合の売上を試算できます。</div>';
+  const decreases=model.items.filter(x=>x.recover>0&&x.price>0).sort((a,b)=>b.recoverYen-a.recoverYen);
+  if(decreases.length){const top=decreases[0];html+=`<div class="advice-comment"><h3>まずは「${escapePace(top.name)}」の荷量を確認</h3>${prevMonth}に比べ、1稼働日あたりの個数が減っています。以前の平均に戻す目安として、1日あと${top.recover}個を追加できるか、委託元に相談してみましょう。${days}日稼働なら、現在の単価で約<strong>${yen(top.recoverYen)}円</strong>の売上増加を見込む試算です。</div>`;}
+  else if(model.previous.days)html+='<div class="advice-comment">単価が設定された荷物では、1稼働日あたりの個数の減少は見られません。配達時間に余裕がある日に追加の荷物を引き受けられるか、下の試算を目安に検討しましょう。</div>';
+  model.items.forEach((item,index)=>{
+    const key=month+'|'+item.id;const extra=adviceExtras.has(key)?adviceExtras.get(key):item.recover||5;
+    adviceExtras.set(key,extra);
+    let comment='比較先に稼働記録がないため増減は判定できません。';
+    if(model.previous.days&&stats.days){const delta=item.avg-item.prior;comment=`月合計は${item.priorCount.toLocaleString()}個 → ${item.count.toLocaleString()}個。1稼働日あたりは${item.prior.toFixed(1)}個 → ${item.avg.toFixed(1)}個で、${Math.abs(delta)<0.05?'ほぼ横ばいです。':delta<0?'減っています。荷量を増やせるか確認してみましょう。':'増えています。このペースを続けるのが売上維持につながります。'}`;if(item.count<item.priorCount&&delta>=-0.05)comment+='月合計は減っていますが、1稼働日あたりは維持できています。稼働日数の違いも確認しましょう。';}
+    html+=`<article class="advice-comment"><h3>${escapePace(item.name)} <span class="advice-note">単価 ${yen(item.price)}円 / 個</span></h3><p>${comment}</p><div style="margin-top:12px;">1日あと <input class="advice-extra" type="number" min="0" max="9999" step="1" value="${extra}" aria-label="${escapePace(item.name)}の1日追加個数" oninput="updateAdviceExtra(${index},this)"> 個 × ${days}日</div><p class="advice-lift" id="advice-lift-${index}">+${yen(extra*item.price*days)}円 / 月</p><p class="advice-note" id="advice-formula-${index}">${extra}個 × ${yen(item.price)}円 × ${days}日${item.price===0?'（単価を設定すると金額を試算できます）':''}</p></article>`;
+  });
+  html+='<p class="advice-note">追加個数は検討用の例です。荷物の割り当てや種類は委託元と相談し、配送に無理のない範囲で検討してください。増加額は追加分の売上で、経費を引いた利益ではありません。単価変更履歴がないため、過去分も現在の設定単価で換算します。</p>';
+  el.innerHTML=html;
+}
+function updateAdviceExtra(index,input){
+  const month=document.getElementById('advice-month').value,cat=cats[index],days=Number(document.getElementById('advice-days').value);
+  const value=Number(input.value);const valid=input.value!==''&&Number.isInteger(value)&&value>=0&&value<=9999;
+  if(!valid){document.getElementById('advice-lift-'+index).textContent='0〜9999の整数を入力';document.getElementById('advice-formula-'+index).textContent='';return;}
+  adviceExtras.set(month+'|'+cat.id,value);
+  const price=Math.max(0,Number(cat.price)||0);
+  document.getElementById('advice-lift-'+index).textContent='+'+(value*price*days).toLocaleString('ja-JP')+'円 / 月';
+  document.getElementById('advice-formula-'+index).textContent=value+'個 × '+price.toLocaleString('ja-JP')+'円 × '+days+'日';
+}
+const adviceOriginalSwitch=switchTab;switchTab=function(t){adviceOriginalSwitch(t);if(t==='advice')initAdvice();};
+const adviceOriginalLogout=doLogout;doLogout=function(){adviceExtras.clear();document.getElementById('advice-month').value='';document.getElementById('advice-content').innerHTML='';adviceOriginalLogout();};
+
 </script>
 </body>
 </html>
