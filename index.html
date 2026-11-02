@@ -995,6 +995,38 @@
 .pace-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.pace-controls input{display:block;width:100%;margin-top:8px;background:var(--paper-2);color:var(--ink);border:1px solid var(--line-2);padding:12px;border-radius:var(--r);color-scheme:light} [data-theme="dark"] .pace-controls input{color-scheme:dark}.pace-table{width:100%;border-collapse:collapse;font-size:12px}.pace-table td,.pace-table th{padding:10px 6px;border-bottom:1px solid var(--line);text-align:left}.pace-table th{color:var(--muted);font-weight:500}.pace-progress{height:8px;background:var(--bg-soft);border-radius:9px;overflow:hidden;margin:12px 0}.pace-progress div{height:100%;background:var(--indigo)}@media(max-width:480px){.pace-controls{grid-template-columns:1fr}}
 .tab-bar{overflow-x:auto}.tab-btn{white-space:nowrap}.advice-note{font-size:12px;color:var(--muted);line-height:1.9}.advice-comment{background:var(--paper-2);border-left:3px solid var(--indigo);padding:16px;margin:14px 0;border-radius:var(--r);line-height:1.9;font-size:13px}.advice-comment h3{font-size:15px;margin-bottom:7px}.advice-lift{font-size:22px;color:var(--indigo);font-weight:600;margin:8px 0}.advice-extra{width:80px;background:var(--paper);color:var(--ink);border:1px solid var(--line-2);border-radius:var(--r);padding:8px}#advice-month{color-scheme:light}[data-theme="dark"] #advice-month{color-scheme:dark}
 .analysis-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0}.analysis-controls input,.analysis-controls select{display:block;width:100%;margin-top:8px;min-height:44px;padding:10px;background:var(--paper-2);color:var(--ink);border:1px solid var(--line-2);border-radius:var(--r);color-scheme:light}[data-theme="dark"] .analysis-controls input,[data-theme="dark"] .analysis-controls select{color-scheme:dark}.analysis-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}.analysis-cards .metric-value{font-size:24px;overflow-wrap:anywhere}.analysis-chart-wrap{overflow-x:auto;margin-top:18px}.analysis-chart-wrap svg{display:block;width:100%;min-width:720px;color:var(--muted)}.cal-day.is-off{background:var(--bg-soft);border-style:dashed}.off-mark{font-size:10px;color:var(--muted);margin-left:4px}.goal-track{height:12px;background:var(--bg-soft);border-radius:12px;overflow:hidden;margin:12px 0}.goal-track div{height:100%;background:var(--indigo)}@media(max-width:480px){.analysis-controls{gap:10px}}
+
+/* Tabs keep their natural width; only this row scrolls on small screens. */
+.tab-scroll-shell{position:relative;min-width:0;max-width:100%;margin:0 0 8px;border-radius:14px;background:var(--bg-soft);border:1px solid var(--line)}
+.tab-scroll-shell .tab-bar{display:flex;flex-wrap:nowrap;justify-content:flex-start;gap:6px;max-width:100%;min-width:0;margin:0;padding:6px;overflow-x:auto;overflow-y:hidden;border:0;scroll-padding-inline:6px;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain;scrollbar-width:thin;scrollbar-color:var(--line-3) transparent}
+.tab-scroll-shell .tab-bar::-webkit-scrollbar{height:3px}
+.tab-scroll-shell .tab-bar::-webkit-scrollbar-thumb{background:var(--line-3);border-radius:6px}
+.tab-scroll-shell .tab-btn{flex:0 0 auto;min-height:44px;margin:0;padding:12px 18px;border:0;border-radius:9px;font-size:13px;line-height:1.5;letter-spacing:.035em;white-space:nowrap;color:var(--muted);transition:background .15s,color .15s,box-shadow .15s}
+.tab-scroll-shell .tab-btn.active{background:var(--paper);color:var(--indigo);box-shadow:var(--shadow-card);font-weight:700;border:0}
+.tab-scroll-shell .tab-btn:focus-visible{outline:2px solid var(--indigo);outline-offset:-2px}
+.tab-swipe-hint{display:none;margin:0 4px 20px;font-size:10px;line-height:1.5;letter-spacing:.04em;color:var(--muted)}
+@media(max-width:680px){.tab-swipe-hint{display:block}.tab-scroll-shell .tab-btn{padding-inline:16px}}
+@media(prefers-reduced-motion:reduce){.tab-scroll-shell .tab-btn{transition:none}}
+
+
+/* Compact menu trigger and vertical wheel picker. */
+.tab-scroll-shell{border:0;background:transparent;margin-bottom:8px}
+.menu-trigger{display:flex;align-items:center;justify-content:space-between;gap:16px;width:100%;padding:15px 18px;min-height:58px;border:1px solid var(--line-2);border-radius:14px;background:var(--paper);color:var(--ink);font-family:inherit;text-align:left;cursor:pointer;box-shadow:var(--shadow-card)}
+.menu-trigger small{display:block;color:var(--muted);font-size:10px;letter-spacing:.08em;margin-bottom:5px}.menu-trigger strong{font-size:16px;font-weight:600}.menu-trigger-chevron{font-size:22px;color:var(--indigo)}
+.menu-dialog{padding:22px 18px 18px;width:min(420px,calc(100% - 28px));max-height:calc(100dvh - 40px);overflow:auto;position:fixed;inset:0;margin:auto;border:1px solid var(--line-2);border-radius:28px;background:var(--paper);color:var(--ink);box-shadow:var(--shadow-pop)}
+.menu-dialog::backdrop{background:rgba(27,24,20,.28);backdrop-filter:blur(3px)}
+.menu-dialog h2{font-size:17px;font-weight:600;text-align:center;margin:0 0 8px}.menu-dialog .advice-note{text-align:center;margin-bottom:14px}
+.menu-wheel-shell{position:relative;height:260px;margin:8px 0 20px;overflow:hidden}
+.menu-wheel-shell::before{content:"";position:absolute;inset:104px 0 auto;height:52px;border-radius:12px;background:var(--bg-soft);pointer-events:none}
+.menu-wheel-shell .tab-bar{position:relative;display:block;height:260px;padding:104px 0;margin:0;box-sizing:border-box;overflow-y:auto;overflow-x:hidden;border:0;scroll-snap-type:y mandatory;overscroll-behavior-y:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;mask-image:linear-gradient(transparent,#000 27%,#000 73%,transparent)}
+.menu-wheel-shell .tab-bar::-webkit-scrollbar{display:none}
+.menu-wheel-shell .tab-btn{display:block;box-sizing:border-box;flex:none;width:100%;height:52px;min-height:52px;margin:0;padding:0 8px;border:0;border-radius:0;scroll-snap-align:center;background:transparent;box-shadow:none;color:var(--muted);font-size:18px;font-weight:400;line-height:52px;white-space:nowrap;letter-spacing:.03em;opacity:.5;transition:opacity .12s,color .12s;touch-action:pan-y}
+.menu-wheel-shell .tab-btn.active{border:0;background:transparent;color:var(--muted)}
+.menu-wheel-shell .tab-btn.wheel-chosen{color:var(--ink);font-weight:600;font-size:21px;opacity:1}
+.menu-wheel-shell .tab-bar:focus-visible{outline:2px solid var(--indigo);outline-offset:-2px;border-radius:12px}
+.menu-dialog-actions{display:flex;align-items:center;justify-content:space-between;gap:12px}.menu-dialog-actions button{min-height:46px;padding:12px 22px;border-radius:30px;font-family:inherit;font-size:14px;cursor:pointer}.menu-cancel{border:1px solid var(--line-2);background:var(--paper-2);color:var(--ink)}.menu-confirm{border:0;background:var(--indigo);color:var(--paper);font-weight:600}
+@media(prefers-reduced-motion:reduce){.menu-wheel-shell .tab-btn{transition:none}}
+
 </style>
 </head>
 <body>
@@ -1073,13 +1105,16 @@
     <!-- 当締め期間バナー -->
     <div class="summary-banner" id="period-banner"></div>
 
-    <div class="tab-bar">
+    <div class="tab-scroll-shell"><div class="tab-bar" role="navigation" aria-label="配送トラッカーの画面切り替え">
       <button class="tab-btn active" id="tab-input" onclick="switchTab('input')">記録入力</button>
       <button class="tab-btn" id="tab-calendar" onclick="switchTab('calendar')">カレンダー</button>
       <button class="tab-btn" id="tab-analysis" onclick="switchTab('analysis')">分析・自動目標</button>
       <button class="tab-btn" id="tab-advice" onclick="switchTab('advice')">売上アドバイス</button>
       <button class="tab-btn" id="tab-list" onclick="switchTab('list')">記録一覧</button>
     </div>
+
+    </div>
+    <p class="tab-swipe-hint">タップしてメニューを選択</p>
 
     <!-- 入力 -->
     <div id="pane-input">
@@ -1937,6 +1972,48 @@ function analysisChart(bars,unit,compare,average){
 }
 const analysisSwitch=switchTab;switchTab=function(t){analysisSwitch(t);if(t==='analysis')initAnalysis();};
 const analysisLogout=doLogout;doLogout=function(){document.getElementById('analysis-month').value='';document.getElementById('analysis-output').innerHTML='';document.getElementById('analysis-chart').innerHTML='';analysisLogout();};
+
+
+
+const menuOriginalSwitch=switchTab;
+let menuCurrent='input',menuDraft=0;
+const menuItems=[['input','記録入力'],['calendar','カレンダー'],['analysis','分析・自動目標'],['advice','売上アドバイス'],['list','記録一覧']];
+const menuRail=document.querySelector('.tab-bar');
+const menuShell=document.querySelector('.tab-scroll-shell');
+const menuDialog=document.createElement('dialog');menuDialog.className='menu-dialog';menuDialog.id='menu-dialog';menuDialog.setAttribute('aria-labelledby','menu-dialog-title');
+menuDialog.innerHTML='<h2 id="menu-dialog-title">メニューを選択</h2><p class="advice-note">上下にスクロールして中央に合わせてください</p><div class="menu-wheel-shell"></div><div class="menu-dialog-actions"><button type="button" class="menu-cancel">キャンセル</button><button type="button" class="menu-confirm">決定</button></div>';
+document.body.appendChild(menuDialog);menuDialog.querySelector('.menu-wheel-shell').appendChild(menuRail);
+menuShell.innerHTML='<button type="button" class="menu-trigger" id="menu-trigger" aria-haspopup="dialog" aria-controls="menu-dialog" aria-expanded="false"><span><small>MENU</small><strong id="menu-current-label">記録入力</strong></span><span class="menu-trigger-chevron" aria-hidden="true">⌄</span></button>';
+menuRail.removeAttribute('aria-label');menuRail.setAttribute('role','listbox');menuRail.setAttribute('aria-label','表示する画面');menuRail.tabIndex=0;
+menuItems.forEach(([id],index)=>{const button=document.getElementById('tab-'+id);button.removeAttribute('onclick');button.setAttribute('role','option');button.setAttribute('aria-selected','false');button.tabIndex=-1;button.addEventListener('click',()=>menuScrollTo(index));});
+function menuSetDraft(index){
+  menuDraft=Math.max(0,Math.min(menuItems.length-1,index));
+  menuItems.forEach(([id],i)=>{const option=document.getElementById('tab-'+id);option.classList.toggle('wheel-chosen',i===menuDraft);option.setAttribute('aria-selected',String(i===menuDraft));});
+  menuRail.setAttribute('aria-activedescendant','tab-'+menuItems[menuDraft][0]);
+}
+function menuScrollTo(index){menuSetDraft(index);menuRail.scrollTo({top:menuDraft*52,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}
+function openMenuPicker(){
+  menuSetDraft(menuItems.findIndex(([id])=>id===menuCurrent));
+  menuDialog.showModal();document.getElementById('menu-trigger').setAttribute('aria-expanded','true');
+  menuRail.scrollTop=menuDraft*52;menuRail.focus({preventScroll:true});
+}
+function confirmMenuPicker(){
+  menuSetDraft(Math.round(menuRail.scrollTop/52));const id=menuItems[menuDraft][0];menuDialog.close();switchTab(id);
+}
+menuRail.addEventListener('scroll',()=>menuSetDraft(Math.round(menuRail.scrollTop/52)),{passive:true});
+menuRail.addEventListener('keydown',event=>{
+  if(['ArrowDown','ArrowUp','Home','End','Enter',' '].includes(event.key))event.preventDefault();
+  if(event.key==='ArrowDown')menuScrollTo(menuDraft+1);
+  if(event.key==='ArrowUp')menuScrollTo(menuDraft-1);
+  if(event.key==='Home')menuScrollTo(0);
+  if(event.key==='End')menuScrollTo(menuItems.length-1);
+  if(event.key==='Enter'||event.key===' ')confirmMenuPicker();
+});
+document.getElementById('menu-trigger').addEventListener('click',openMenuPicker);
+menuDialog.querySelector('.menu-cancel').addEventListener('click',()=>menuDialog.close());
+menuDialog.querySelector('.menu-confirm').addEventListener('click',confirmMenuPicker);
+menuDialog.addEventListener('close',()=>{document.getElementById('menu-trigger').setAttribute('aria-expanded','false');document.getElementById('menu-trigger').focus({preventScroll:true});});
+switchTab=function(id){menuOriginalSwitch(id);menuCurrent=id;document.getElementById('menu-current-label').textContent=menuItems.find(item=>item[0]===id)?.[1]||id;};
 
 </script>
 </body>
