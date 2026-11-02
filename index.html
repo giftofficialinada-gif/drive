@@ -994,6 +994,7 @@
   }
 .pace-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.pace-controls input{display:block;width:100%;margin-top:8px;background:var(--paper-2);color:var(--ink);border:1px solid var(--line-2);padding:12px;border-radius:var(--r);color-scheme:light} [data-theme="dark"] .pace-controls input{color-scheme:dark}.pace-table{width:100%;border-collapse:collapse;font-size:12px}.pace-table td,.pace-table th{padding:10px 6px;border-bottom:1px solid var(--line);text-align:left}.pace-table th{color:var(--muted);font-weight:500}.pace-progress{height:8px;background:var(--bg-soft);border-radius:9px;overflow:hidden;margin:12px 0}.pace-progress div{height:100%;background:var(--indigo)}@media(max-width:480px){.pace-controls{grid-template-columns:1fr}}
 .tab-bar{overflow-x:auto}.tab-btn{white-space:nowrap}.advice-note{font-size:12px;color:var(--muted);line-height:1.9}.advice-comment{background:var(--paper-2);border-left:3px solid var(--indigo);padding:16px;margin:14px 0;border-radius:var(--r);line-height:1.9;font-size:13px}.advice-comment h3{font-size:15px;margin-bottom:7px}.advice-lift{font-size:22px;color:var(--indigo);font-weight:600;margin:8px 0}.advice-extra{width:80px;background:var(--paper);color:var(--ink);border:1px solid var(--line-2);border-radius:var(--r);padding:8px}#advice-month{color-scheme:light}[data-theme="dark"] #advice-month{color-scheme:dark}
+.analysis-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0}.analysis-controls input,.analysis-controls select{display:block;width:100%;margin-top:8px;min-height:44px;padding:10px;background:var(--paper-2);color:var(--ink);border:1px solid var(--line-2);border-radius:var(--r);color-scheme:light}[data-theme="dark"] .analysis-controls input,[data-theme="dark"] .analysis-controls select{color-scheme:dark}.analysis-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}.analysis-cards .metric-value{font-size:24px;overflow-wrap:anywhere}.analysis-chart-wrap{overflow-x:auto;margin-top:18px}.analysis-chart-wrap svg{display:block;width:100%;min-width:720px;color:var(--muted)}.cal-day.is-off{background:var(--bg-soft);border-style:dashed}.off-mark{font-size:10px;color:var(--muted);margin-left:4px}.goal-track{height:12px;background:var(--bg-soft);border-radius:12px;overflow:hidden;margin:12px 0}.goal-track div{height:100%;background:var(--indigo)}@media(max-width:480px){.analysis-controls{gap:10px}}
 </style>
 </head>
 <body>
@@ -1075,6 +1076,7 @@
     <div class="tab-bar">
       <button class="tab-btn active" id="tab-input" onclick="switchTab('input')">記録入力</button>
       <button class="tab-btn" id="tab-calendar" onclick="switchTab('calendar')">カレンダー</button>
+      <button class="tab-btn" id="tab-analysis" onclick="switchTab('analysis')">分析・自動目標</button>
       <button class="tab-btn" id="tab-advice" onclick="switchTab('advice')">売上アドバイス</button>
       <button class="tab-btn" id="tab-list" onclick="switchTab('list')">記録一覧</button>
     </div>
@@ -1129,6 +1131,10 @@
       <div id="cal-detail" style="margin-top:1.25rem;"></div>
     </div>
 
+<div id="pane-analysis" class="hidden"><section class="card"><p class="eyebrow">ANALYSIS / AUTO GOAL</p><h2 class="serif" style="font-size:24px;margin:8px 0 16px;">分析・自動目標</h2>
+<div class="analysis-controls"><label>対象月<input type="month" id="analysis-month" onchange="renderAnalysis()"></label><label>表示する数字<select id="analysis-metric" onchange="renderAnalysis()"><option value="yen">金額</option><option value="count">個数</option></select></label><label>荷物の種類<select id="analysis-cat" onchange="renderAnalysis()"></select></label><label>グラフ<select id="analysis-view" onchange="renderAnalysis()"><option value="daily">日別・前月と比較</option><option value="monthly">月別・12か月</option></select></label></div>
+<div id="analysis-output" aria-live="polite"></div><div id="analysis-chart"></div>
+<p class="advice-note" style="margin-top:18px;">金額は現在の設定単価で換算。暦月で集計し、締め期間とは別です。休み予定はこのブラウザ・ユーザーごとに保存します。休みの日に配送実績がある場合は実績を優先し、稼働日として数えます。</p></section></div>
 <div id="pane-advice" class="hidden">
   <section class="card"><p class="eyebrow">SALES ADVICE</p><h2 class="serif" style="font-size:24px;margin:8px 0 12px;">売上を伸ばすヒント</h2>
   <p class="advice-note">保存済みの配送記録と現在の設定単価から、荷物の増減と売上アップの例を自動でコメントします。</p>
@@ -1471,7 +1477,7 @@ function renderPeriodBanner(){
 
 /* ══ Tabs ══ */
 function switchTab(t){
-  ['input','calendar','list','advice'].forEach(p=>{document.getElementById('pane-'+p).classList.toggle('hidden',p!==t);document.getElementById('tab-'+p).classList.toggle('active',p===t);});
+  ['input','calendar','list','advice','analysis'].forEach(p=>{document.getElementById('pane-'+p).classList.toggle('hidden',p!==t);document.getElementById('tab-'+p).classList.toggle('active',p===t);});
   if(t==='calendar')renderCalendar();
   if(t==='list')renderHistory();
 }
@@ -1617,8 +1623,8 @@ function renderCalendar(){
     const rec=recMap[dateStr];const isToday=dateStr===today;const hasData=!!rec&&!isOther;
     const isClosing=dateStr===closingDateStr&&!isOther;
     const dow=i%7;const nc=dow===0?'color:var(--beni)':dow===6?'color:var(--indigo)':'';
-    cells+=`<div class="cal-day${isOther?' other-month':''}${isToday?' today':''}${hasData?' has-data':''}${isClosing?' closing-day':''}" onclick="calClick('${dateStr}')">
-      <div class="cal-num" style="${nc}">${day}${isClosing?'<span class="cal-closing-mark">締</span>':''}</div>
+    cells+=`<div class="cal-day${isOther?' other-month':''}${isToday?' today':''}${hasData?' has-data':''}${isClosing?' closing-day':''}${isOffDate(dateStr)?' is-off':''}" onclick="calClick('${dateStr}')">
+      <div class="cal-num" style="${nc}">${day}${isOffDate(dateStr)?'<span class="off-mark">休</span>':''}${isClosing?'<span class="cal-closing-mark">締</span>':''}</div>
       ${hasData?`<div class="cal-yen num">${recYen(rec).toLocaleString()}</div><div class="cal-cnt">${recTotal(rec)}個</div>`:''}
     </div>`;
   }
@@ -1854,6 +1860,83 @@ function updateAdviceExtra(index,input){
 }
 const adviceOriginalSwitch=switchTab;switchTab=function(t){adviceOriginalSwitch(t);if(t==='advice')initAdvice();};
 const adviceOriginalLogout=doLogout;doLogout=function(){adviceExtras.clear();document.getElementById('advice-month').value='';document.getElementById('advice-content').innerHTML='';adviceOriginalLogout();};
+
+
+/* Integrated goals, calendar days off, averages and charts. */
+function loadDaysOff(){try{const data=JSON.parse(localStorage.getItem('delivery_days_off_v1_'+CU)||'[]');return Array.isArray(data)?new Set(data.filter(x=>/^\d{4}-\d{2}-\d{2}$/.test(x))):new Set();}catch{return new Set();}}
+function isOffDate(date){return loadDaysOff().has(date);}
+function toggleDayOff(date){
+  const days=loadDaysOff();const off=days.has(date);
+  if(!off&&records.some(r=>r.date===date&&Object.values(r.counts||{}).some(n=>Number(n)>0))&&!confirm('配送実績がある日です。休み表示にしますか？記録は残り、計算では稼働日として扱います。'))return;
+  if(off)days.delete(date);else days.add(date);
+  try{localStorage.setItem('delivery_days_off_v1_'+CU,JSON.stringify([...days]));}catch{showToast('休み設定を保存できませんでした');return;}
+  renderCalendar();calClick(date);showToast(off?'休みを解除しました':'休みに設定しました');
+}
+const analysisCalClick=calClick;calClick=function(date){analysisCalClick(date);document.getElementById('cal-detail').insertAdjacentHTML('beforeend',`<div class="card" style="margin-top:10px;"><p class="advice-note">${date}：${isOffDate(date)?'休み予定':'稼働予定'}（配送実績がある日は稼働扱い）</p><button class="btn-sm" style="margin-top:10px;" onclick="toggleDayOff('${date}')">${isOffDate(date)?'休みを解除する':'この日を休みにする'}</button></div>`);};
+function analysisShift(month,delta){const [y,m]=month.split('-').map(Number);return fmtDate(new Date(y,m-1+delta,1)).slice(0,7);}
+function analysisMonthDates(month){const [y,m]=month.split('-').map(Number);return Array.from({length:new Date(y,m,0).getDate()},(_,i)=>month+'-'+String(i+1).padStart(2,'0'));}
+function analysisValue(record,categories,metric,category){return categories.filter(c=>category==='all'||category===c.id).reduce((sum,c)=>sum+Math.max(0,Number((record.counts||{})[c.id])||0)*(metric==='yen'?Math.max(0,Number(c.price)||0):1),0);}
+function analysisStats(data,categories,month,metric,category,offDays,today){
+  const dates=analysisMonthDates(month),rows=data.filter(r=>r.date?.startsWith(month+'-')&&r.date<=today);
+  const actual=new Set(rows.filter(r=>Object.values(r.counts||{}).some(n=>Number(n)>0)).map(r=>r.date));
+  const planned=dates.filter(date=>!offDays.has(date)||actual.has(date));
+  const passed=planned.filter(date=>date<=today).length,remaining=planned.filter(date=>date>today).length;
+  const total=rows.reduce((sum,r)=>sum+analysisValue(r,categories,metric,category),0);
+  return {total,days:actual.size,planned:planned.length,passed,remaining,dates,rows,avg:actual.size?total/actual.size:0,calendarAvg:total/Math.max(1,dates.filter(d=>d<=today).length)};
+}
+function analysisModel(data,categories,month,metric,category,offDays,today){
+  const current=analysisStats(data,categories,month,metric,category,offDays,today),previous=analysisStats(data,categories,analysisShift(month,-1),metric,category,offDays,today);
+  let basis=null;for(let i=1;i<=12;i++){const m=analysisShift(month,-i),stats=analysisStats(data,categories,m,metric,category,offDays,today);if(stats.total>0){basis={month:m,...stats};break;}}
+  const rounding=metric==='yen'?1000:10;const goal=basis?Math.ceil(basis.total*1.05/rounding-1e-9)*rounding:null;
+  const left=goal===null?null:Math.max(0,goal-current.total),past=month<today.slice(0,7),future=month>today.slice(0,7);
+  const weight=current.planned?current.passed/current.planned:0;
+  const thisPace=current.passed?current.total/current.passed:0;
+  const prevPace=previous.planned?previous.total/previous.planned:0;
+  const pace=previous.total>0?thisPace*weight+prevPace*(1-weight):thisPace;
+  const forecast=past?current.total:future?null:(current.days||previous.days?current.total+pace*current.remaining:null);
+  return {current,previous,basis,goal,left,forecast,past,future,needed:current.remaining&&left!==null?Math.ceil(left/current.remaining):null};
+}
+function initAnalysis(){
+  const m=document.getElementById('analysis-month');if(!m.value)m.value=todayStr().slice(0,7);
+  const cat=document.getElementById('analysis-cat'),selected=cat.value||'all';
+  cat.innerHTML='<option value="all">すべて</option>'+cats.map(c=>`<option value="${escapePace(c.id)}">${escapePace(c.name)}</option>`).join('');
+  cat.value=cats.some(c=>c.id===selected)?selected:'all';renderAnalysis();
+}
+function renderAnalysis(){
+  const month=document.getElementById('analysis-month').value;if(!/^\d{4}-\d{2}$/.test(month))return;
+  const metric=document.getElementById('analysis-metric').value,category=document.getElementById('analysis-cat').value||'all',today=todayStr(),off=loadDaysOff();
+  const m=analysisModel(records,cats,month,metric,category,off,today),c=m.current,p=m.previous;
+  const unit=metric==='yen'?'円':'個',num=n=>n===null?'—':Math.round(n).toLocaleString('ja-JP'),format=n=>num(n)+(n===null?'':unit);
+  const card=(label,value)=>`<div class="metric"><p class="metric-label">${label}</p><p class="metric-value">${value}</p></div>`;
+  const progress=m.goal?Math.max(0,c.total/m.goal*100):0;
+  let html=`<div class="analysis-cards">${card('選択月の実績',format(c.total))}${card('自動目標（直近実績＋5%）',format(m.goal))}${card('達成率',m.goal?progress.toFixed(1)+'%':'—')}${card('目標まであと',format(m.left))}</div>`;
+  html+=`<div class="goal-track"><div style="width:${Math.min(100,progress)}%"></div></div><p class="advice-note">${m.basis?'目標の基準：'+m.basis.month+' の実績 '+format(m.basis.total)+' × 105%。'+(metric==='yen'?'1,000円':'10個')+'単位で切り上げ。':'過去12か月に対象の実績がないため、目標を設定できません。'}${m.past?' 過去月の目標は参考表示です。':''}</p>`;
+  html+=`<div class="analysis-cards">${card('記録済み稼働日 / 月間稼働予定',c.days+'日 / '+c.planned+'日')}${card('残り稼働予定日（明日以降）',c.remaining+'日')}${card('1稼働日平均（記録のある日）',format(c.days?c.avg:null))}${card('暦日平均（月初〜今日）',m.future?'—':format(c.calendarAvg))}${card(m.past?'月合計（記録ベース）':'月末予測',format(m.forecast))}${card('目標に必要な1稼働日あたり',m.left===0?'達成済み':m.past?'対象月終了':m.needed===null?'残り稼働日なし':format(m.needed))}</div>`;
+  if(!m.past&&!m.future)html+='<p class="advice-note">月末予測＝現在実績＋残り稼働予定日×推定ペース。今月の経過稼働予定日あたり実績と前月の稼働予定日あたり実績を組み合わせ、月末に近づくほど今月を重視します。今日の残り時間は含めません。未入力日があると予測が低くなるため、目安としてご覧ください。</p>';
+  const cutoff=m.past?c.dates.length:m.future?0:Number(today.slice(8));
+  const samePrev=p.rows.filter(r=>Number(r.date.slice(8))<=cutoff).reduce((sum,r)=>sum+analysisValue(r,cats,metric,category),0);
+  const diff=c.total-samePrev;html+=`<div class="advice-comment"><h3>前月の同日時点と比較</h3>${format(samePrev)} → ${format(c.total)} / ${diff>=0?'+':''}${format(diff)}${samePrev>0?'（'+(diff>=0?'+':'')+(diff/samePrev*100).toFixed(1)+'%）':''}<p class="advice-note">1日〜${cutoff}日。月の日数が異なる場合、存在する日までで集計します。</p></div>`;
+  document.getElementById('analysis-output').innerHTML=html;
+  const view=document.getElementById('analysis-view').value;
+  const sums=rows=>{const map={};rows.forEach(r=>map[r.date]=(map[r.date]||0)+analysisValue(r,cats,metric,category));return map;};
+  let bars;
+  if(view==='monthly')bars=Array.from({length:12},(_,i)=>{const mon=analysisShift(month,i-11);return {label:mon.slice(2).replace('-','/'),a:analysisStats(records,cats,mon,metric,category,off,today).total};});
+  else{const a=sums(c.rows),b=sums(p.rows),prev=analysisShift(month,-1);bars=c.dates.map((d,i)=>({label:String(i+1),a:d>today?null:a[d]||0,b:b[prev+d.slice(7)]||0}));}
+  const average=view==='monthly'?bars.reduce((s,b)=>s+b.a,0)/12:c.avg;
+  document.getElementById('analysis-chart').innerHTML=analysisChart(bars,unit,view==='daily',average);
+}
+function analysisChart(bars,unit,compare,average){
+  const W=1000,H=320,L=80,R=25,T=40,B=55,iw=W-L-R,ih=H-T-B;
+  const max=Math.max(1,...bars.flatMap(x=>[x.a||0,x.b||0]),average||0)*1.12,scale=v=>T+ih-v/max*ih,step=iw/bars.length;
+  let svg=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${compare?'日別の選択月と前月':'12か月の月別'}実績グラフ。単位${unit}">`;
+  for(let i=0;i<=4;i++){const v=max*i/4,y=scale(v);svg+=`<line x1="${L}" x2="${W-R}" y1="${y}" y2="${y}" stroke="var(--line-2)"/><text x="${L-8}" y="${y+4}" text-anchor="end" fill="currentColor" font-size="12">${Math.round(v).toLocaleString()}</text>`;}
+  svg+=`<line x1="${L}" x2="${W-R}" y1="${scale(average)}" y2="${scale(average)}" stroke="var(--kincha)" stroke-dasharray="6 4"/><text x="${L}" y="20" fill="currentColor" font-size="12">平均 ${Math.round(average).toLocaleString()}${unit}${compare?' / 記録済み稼働日':' / 12か月'}</text>`;
+  bars.forEach((bar,i)=>{const x=L+i*step+step*.15,width=step*(compare?.32:.7);if(compare)svg+=`<rect x="${x+width}" y="${scale(bar.b||0)}" width="${width}" height="${ih*(bar.b||0)/max}" fill="var(--indigo)" opacity=".25"><title>前月 ${bar.label}日：${Math.round(bar.b||0).toLocaleString()}${unit}</title></rect>`;if(bar.a!==null){svg+=`<rect x="${x}" y="${scale(bar.a)}" width="${width}" height="${ih*bar.a/max}" fill="var(--indigo)"><title>${bar.label}：${Math.round(bar.a).toLocaleString()}${unit}</title></rect>`;if(!compare)svg+=`<text x="${x+width/2}" y="${scale(bar.a)-6}" text-anchor="middle" fill="currentColor" font-size="11">${Math.round(bar.a).toLocaleString()}</text>`;}svg+=`<text x="${L+(i+.5)*step}" y="${H-30}" text-anchor="middle" fill="currentColor" font-size="12">${bar.label}</text>`;});
+  svg+='</svg>';
+  return `<h3 style="margin-top:22px;font-size:16px;">${compare?'日別・前月の同日と比較':'月別・12か月の推移'}</h3><p class="advice-note">${compare?'濃い棒＝選択月 / 薄い棒＝前月。未来の選択月データは表示しません。':'各棒の上に合計を表示。記録のない月は0として集計。'} 金茶の点線＝平均。横にスクロールして確認できます。</p><div class="analysis-chart-wrap">${svg}</div><details style="margin-top:12px;"><summary>数値一覧を見る</summary><div style="max-height:250px;overflow:auto;"><table class="pace-table"><thead><tr><th>${compare?'日':'月'}</th><th>実績（${unit}）</th>${compare?'<th>前月</th>':''}</tr></thead><tbody>${bars.map(b=>`<tr><td>${b.label}</td><td>${b.a===null?'—':Math.round(b.a).toLocaleString()}</td>${compare?'<td>'+Math.round(b.b||0).toLocaleString()+'</td>':''}</tr>`).join('')}</tbody></table></div></details>`;
+}
+const analysisSwitch=switchTab;switchTab=function(t){analysisSwitch(t);if(t==='analysis')initAnalysis();};
+const analysisLogout=doLogout;doLogout=function(){document.getElementById('analysis-month').value='';document.getElementById('analysis-output').innerHTML='';document.getElementById('analysis-chart').innerHTML='';analysisLogout();};
 
 </script>
 </body>
